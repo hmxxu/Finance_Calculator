@@ -15,7 +15,7 @@ const CarPaymentInputBox = ({
   const [inputValues, setInputValues] = useState({
     price: 45000,
     term: 60,
-    interest: 7.24,
+    interest: 6.89,
     downPayment: 20,
     salesTax: 8.52,
     fees: 2300,

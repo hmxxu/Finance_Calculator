@@ -142,6 +142,7 @@ function calculateResults(rd, md, cds) {
 
       totalInvested += contribution;
     } else {
+      contribution = rd.retirementIncome;
       savings -= rd.retirementIncomeNeeded + rd.retirementIncome;
       savings += savings * investReturnRate; // If invested money keep compouding durning retirement
     }

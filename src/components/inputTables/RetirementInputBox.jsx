@@ -14,7 +14,7 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
     income: 60000,
     incomeIncrease: 3.58,
     retirementIncomeNeeded: 80000,
-    investReturnRate: 7.39,
+    investReturnRate: 10.16,
     savings: 10000,
     yearlyContribution: 40,
     retirementIncome: 25000,
@@ -187,6 +187,7 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
         leftText="Retirement Income"
         leftlabelText="$"
         defaultInput={inputValues.retirementIncome}
+        rightText="/year"
         onInputChange={handleInputChange}
         infoText="This is any other income durning retire (social security, pension, etc)"
         maxValue={1000000}
