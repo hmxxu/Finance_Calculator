@@ -56,7 +56,7 @@ const MortgageInputBox = ({
       }
       setErrorMessage("");
     }
-  }, [inputValues, currentAge]);
+  }, [inputValues, currentAge, homePage, setMortgageData]);
 
   const handleInputChange = (name, value) => {
     setInputValues({

@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import InputHeader from "./inputTableComponenets/InputHeader";
 import Input from "./inputTableComponenets/Input";
-import InputError from "./inputTableComponenets/InputError";
 import InputButton from "./inputTableComponenets/InputButton";
 import FilledInput from "./inputTableComponenets/FilledInput";
 
@@ -43,7 +42,7 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
       }
       setErrorMessage("");
     }
-  }, [inputValues]);
+  }, [inputValues, homePage, setRetirementData]);
 
   const handleInputChange = (name, value) => {
     setInputValues({

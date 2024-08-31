@@ -39,7 +39,7 @@ const Home = () => {
   useEffect(() => {
     // Delete/pop if carLoanCount is decremented
     if (carLoanCount < carPaymentData.length) carPaymentData.pop();
-  }, [carLoanCount]);
+  }, [carLoanCount, carPaymentData]);
 
   return (
     <div className="App">

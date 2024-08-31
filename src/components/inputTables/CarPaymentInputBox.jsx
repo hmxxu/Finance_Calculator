@@ -35,7 +35,7 @@ const CarPaymentInputBox = ({
       }
       setInputsValid(true);
     }
-  }, [inputValues]);
+  }, [inputValues, homePage, setCarPaymentInputs]);
 
   const handleInputChange = (name, value) => {
     setInputValues({

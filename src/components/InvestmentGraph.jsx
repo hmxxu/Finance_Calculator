@@ -9,7 +9,6 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend,
   Filler,
 } from "chart.js";
 

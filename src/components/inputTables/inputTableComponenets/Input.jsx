@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes, { number } from "prop-types";
+import PropTypes from "prop-types";
 import { useState } from "react";
 import "../../../styles/input.css";
 import icon from "../../../svgs/question-circle.svg";
