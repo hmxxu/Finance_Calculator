@@ -1,0 +1,51 @@
+.investment-table {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 2px solid black !important;
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+  border-spacing: 10px 0;
+}
+
+.investment-table td {
+  padding: 0 30px;
+}
+.investment-table td:first-child {
+  padding-left: 10px;
+}
+.investment-table td:last-child {
+  padding-right: 10px;
+}
+
+.investment-table-col-header td {
+  font-weight: bold;
+  border-bottom: 2px solid black;
+  margin: auto;
+}
+
+@media (max-width: 768px) {
+  .investment-table-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    overflow-x: auto;
+    width: 97%;
+  }
+  .investment-table {
+    width: 95%;
+    max-width: 100%;
+    font-size: 12px;
+  }
+
+  .investment-table td {
+    padding: 0 10px;
+  }
+
+  .investment-table td:first-child {
+    padding-left: 2px;
+  }
+
+  .investment-table td:last-child {
+    padding-right: 2px;
+  }
+}
