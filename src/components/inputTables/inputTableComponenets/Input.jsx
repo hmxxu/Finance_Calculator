@@ -64,7 +64,6 @@ const Input = ({
             paddingRight: infoText ? "20px" : "0px",
             position: "relative",
           }}
-          className="input-left"
         >
           {leftText}
           {infoText && (

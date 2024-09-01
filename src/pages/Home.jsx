@@ -9,9 +9,8 @@ import InvestmentTable from "../components/InvestmentTable";
 import InvestmentGraph from "../components/InvestmentGraph";
 import ResultsTable from "../components/ResultsTable";
 import useMediaQuery from "../hooks/useMediaQuery";
-import InputHeader from "../components/inputTables/inputTableComponenets/InputHeader";
-import InputCounter from "../components/inputTables/inputTableComponenets/InputCounter";
 import InputButton from "../components/inputTables/inputTableComponenets/InputButton";
+import AdditionCarLoans from "../components/AdditionCarLoans";
 
 const Home = () => {
   const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
@@ -20,7 +19,6 @@ const Home = () => {
   const [mortgageData, setMortgageData] = useState(null);
   const [carPaymentData, setCarPaymentData] = useState([]);
   const [results, setResults] = useState(null);
-  //   const [mortgageCount, setmortgageCount] = useState(0);
   const [carLoanCount, setCarLoanCount] = useState(0);
 
   function calculateButton() {
@@ -85,47 +83,22 @@ const Home = () => {
                 width: isAboveMediumScreens ? "" : "100%",
               }}
             >
-              <div style={{ width: isAboveMediumScreens ? "" : "100%" }}>
-                <MortgageInputBox
-                  setMortgageData={setMortgageData}
-                  homePage={true}
-                  currentAge={retirementData ? retirementData.currentAge : 0}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  position: "relative",
-                  width: isAboveMediumScreens ? "100%" : "95%",
-                  flexGrow: 1,
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-              >
-                <table
-                  className="input-table"
-                  style={{
-                    width: "100%",
-                  }}
-                >
-                  <InputHeader header="Addition Assets" />
-                  {/* <InputCounter
-                    leftText="Number of Mortgages:"
-                    setCounter={setmortgageCount}
-                    maxCount={9}
-                  /> */}
-                  <InputCounter
-                    leftText="Number of Car Loans:"
-                    setCounter={setCarLoanCount}
-                    maxCount={9}
-                  />
-                  <InputButton
-                    calcOnClick={calculateButton}
-                    resetOnClick={() => window.location.reload()}
-                  />
-                </table>
-              </div>
+              <MortgageInputBox
+                setMortgageData={setMortgageData}
+                homePage={true}
+                currentAge={retirementData ? retirementData.currentAge : 0}
+              />
             </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              marginLeft: "auto",
+              marginRight: "auto",
+              width: isAboveMediumScreens ? "400px" : "95%",
+            }}
+          >
+            <AdditionCarLoans />
           </div>
           {/* Car Input boxes */}
           <div
@@ -151,6 +124,15 @@ const Home = () => {
               />
             ))}
           </div>
+
+          <table
+            style={{ marginLeft: "auto", marginRight: "auto", width: "100%" }}
+          >
+            <InputButton
+              calcOnClick={calculateButton}
+              resetOnClick={() => window.location.reload()}
+            />
+          </table>
         </div>
         {/* Results */}
         {results && (

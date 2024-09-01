@@ -48,10 +48,10 @@ function calculateResults(rd, md, cds) {
         const res = calculateResults(rd, md2, cds)[0];
 
         if (res[res.length - 1][5] < 0) {
-          high = mid - 100;
+          high = mid - 1;
         } else {
           housePrice = mid;
-          low = mid + 100;
+          low = mid + 1;
         }
       }
     }

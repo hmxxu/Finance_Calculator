@@ -11,16 +11,17 @@ const CarPaymentInputBox = ({
   setCarPaymentInputs,
   homePage = false,
   currentAge,
+  initialValues = {},
 }) => {
   const [inputValues, setInputValues] = useState({
-    price: 45000,
-    term: 60,
-    interest: 6.89,
-    downPayment: 20,
-    salesTax: 8.52,
-    fees: 2300,
-    startAge: 23,
-    inflation: 3.7,
+    price: initialValues.price || 45000,
+    term: initialValues.term || 60,
+    interest: initialValues.interest || 6.89,
+    downPayment: initialValues.downPayment || 20,
+    salesTax: initialValues.salesTax || 8.52,
+    fees: initialValues.fees || 2300,
+    startAge: initialValues.startAge || 23,
+    inflation: initialValues.inflation || 3.7,
   });
 
   const [inputsValid, setInputsValid] = useState(true);

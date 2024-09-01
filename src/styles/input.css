@@ -14,10 +14,6 @@
   column-span: all;
 }
 
-.input-left {
-  font-size: 16px;
-}
-
 .info-icon {
   position: absolute;
   transform: translateY(20%);
