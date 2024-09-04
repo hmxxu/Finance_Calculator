@@ -11,18 +11,26 @@ import ResultsTable from "../components/ResultsTable";
 import useMediaQuery from "../hooks/useMediaQuery";
 import InputButton from "../components/inputTables/inputTableComponenets/InputButton";
 import AdditionCarLoans from "../components/AdditionCarLoans";
+import FilledCarPaymentInputBox from "../components/inputTables/FilledCarPaymentInputBox";
 
 const Home = () => {
   const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
   const [retirementData, setRetirementData] = useState(null);
 
   const [mortgageData, setMortgageData] = useState(null);
-  const [carPaymentData, setCarPaymentData] = useState([]);
   const [results, setResults] = useState(null);
+
+  const [carPaymentData, setCarPaymentData] = useState([]);
   const [carLoanCount, setCarLoanCount] = useState(0);
+  const [carLoanType, setCarLoanType] = useState("normal");
+  const [carIntervalData, setCarIntervalData] = useState([]);
+
+  const [lastAssetInputs, setLastAssetInputs] = useState(null);
 
   function calculateButton() {
-    const res = calculateResults(retirementData, mortgageData, carPaymentData);
+    const carLoanData =
+      carLoanType === "normal" ? carPaymentData : carIntervalData;
+    const res = calculateResults(retirementData, mortgageData, carLoanData);
     setResults(res);
   }
 
@@ -35,16 +43,53 @@ const Home = () => {
   };
 
   useEffect(() => {
-    // Delete/pop if carLoanCount is decremented
-    if (carLoanCount < carPaymentData.length) carPaymentData.pop();
-  }, [carLoanCount, carPaymentData]);
+    // If carLoanCount is decremented, trim carPaymentData
+    if (carLoanCount < carPaymentData.length) {
+      setCarPaymentData((prevData) => prevData.slice(0, carLoanCount));
+    }
+  }, [carPaymentData]);
+
+  function createCDInterval(inputs) {
+    if (
+      retirementData === null ||
+      retirementData.currentAge === null ||
+      retirementData.lifeExpectancy === null
+    )
+      return;
+    setLastAssetInputs(inputs);
+    const startAge = retirementData.currentAge;
+    const endAge = retirementData.lifeExpectancy;
+    const cdIntervals = [];
+    let currentPrice = inputs.startPrice;
+    for (let age = startAge; age <= endAge; age += inputs.xYears) {
+      cdIntervals.push({
+        price: currentPrice,
+        term: 60,
+        interest: 6.89,
+        downPayment: 20,
+        salesTax: 8.52,
+        fees: 2300,
+        startAge: age,
+        inflation: 3.7,
+      });
+      currentPrice += inputs.priceIncrease;
+    }
+    setCarIntervalData(cdIntervals);
+  }
+  function recallCreateCDInterval() {
+    if (lastAssetInputs === null) return;
+    createCDInterval(lastAssetInputs);
+  }
+  useEffect(() => {
+    recallCreateCDInterval();
+  }, [retirementData?.currentAge, retirementData?.lifeExpectancy]);
 
   return (
     <div className="App">
       <Navbar />
       <div
         style={{
-          marginTop: "7rem",
+          marginTop: "5rem",
           display: "flex",
           flexDirection: "column",
           gap: carLoanCount > 0 ? "2rem" : "0",
@@ -56,6 +101,7 @@ const Home = () => {
             display: "flex",
             flexDirection: "column",
             gap: "2rem",
+            paddingTop: "2rem",
           }}
         >
           {/* Retirement, Mortgage, Addition Assets inputs */}
@@ -98,35 +144,58 @@ const Home = () => {
               width: isAboveMediumScreens ? "400px" : "95%",
             }}
           >
-            <AdditionCarLoans />
+            <AdditionCarLoans
+              setCarLoanType={setCarLoanType}
+              setCarLoanCount={setCarLoanCount}
+              setCDInterval={createCDInterval}
+            />
           </div>
           {/* Car Input boxes */}
-          <div
+          {((carLoanType === "normal" && carLoanCount > 0) ||
+            (carLoanType === "interval" && carIntervalData.length > 0)) && (
+            <div
+              style={{
+                marginLeft: "auto",
+                marginRight: "auto",
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "1rem",
+                flexDirection: isAboveMediumScreens ? "row" : "column",
+                maxWidth: isAboveMediumScreens ? "967px" : "",
+                width: "100%",
+              }}
+            >
+              {carLoanType === "normal"
+                ? Array.from({ length: carLoanCount }).map((_, index) => (
+                    <CarPaymentInputBox
+                      key={index}
+                      setCarPaymentInputs={(newData) =>
+                        updateCarPaymentData(index, newData)
+                      }
+                      homePage={true}
+                      currentAge={
+                        retirementData ? retirementData.currentAge : 0
+                      }
+                    />
+                  ))
+                : carIntervalData.map((cd, index) => (
+                    <FilledCarPaymentInputBox
+                      key={index}
+                      header={"Car At Age " + cd.startAge}
+                      price={cd.price}
+                      startAge={cd.startAge}
+                      currentAge={retirementData.currentAge}
+                    />
+                  ))}
+            </div>
+          )}
+
+          <table
             style={{
               marginLeft: "auto",
               marginRight: "auto",
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "1rem",
-              flexDirection: isAboveMediumScreens ? "row" : "column",
-              maxWidth: isAboveMediumScreens ? "967px" : "",
-              width: "100%",
+              width: isAboveMediumScreens ? "100%" : "95%",
             }}
-          >
-            {Array.from({ length: carLoanCount }).map((_, index) => (
-              <CarPaymentInputBox
-                key={index}
-                setCarPaymentInputs={(newData) =>
-                  updateCarPaymentData(index, newData)
-                }
-                homePage={true}
-                currentAge={retirementData ? retirementData.currentAge : 0}
-              />
-            ))}
-          </div>
-
-          <table
-            style={{ marginLeft: "auto", marginRight: "auto", width: "100%" }}
           >
             <InputButton
               calcOnClick={calculateButton}
@@ -135,6 +204,11 @@ const Home = () => {
           </table>
         </div>
         {/* Results */}
+        {results && (
+          <div className="horizontal-divider">
+            <span className="horizontal-divider-text">Results</span>
+          </div>
+        )}
         {results && (
           <div
             style={{

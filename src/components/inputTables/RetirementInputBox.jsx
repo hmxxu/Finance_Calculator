@@ -77,7 +77,9 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
       className="input-table"
       style={{ paddingBottom: homePage ? "10px" : "0px" }}
     >
-      <InputHeader header="Retirement Calculator" />
+      <InputHeader
+        header={homePage ? "Retirement Inputs" : "Retirement Calculator"}
+      />
       <Input
         name="currentAge"
         leftText="Current Age"

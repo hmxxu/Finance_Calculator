@@ -16,23 +16,26 @@ const InputCounter = ({
 
   const increment = () => {
     if (count < maxCount) {
-      setCount((prevCount) => prevCount + 1);
-      if (setCounter) setCounter((prevCount) => prevCount + 1);
+      const newCount = count + 1;
+      setCount(newCount);
+      if (setCounter) setCounter(newCount);
       setErrorMessage("");
     } else {
-      setErrorMessage("max values is " + maxCount);
+      setErrorMessage(`Max value is ${maxCount}`);
     }
   };
 
   const decrement = () => {
     if (count > minCount) {
-      setCount((prevCount) => prevCount - 1);
-      if (setCounter) setCounter((prevCount) => prevCount - 1);
+      const newCount = count - 1;
+      setCount(newCount);
+      if (setCounter) setCounter(newCount);
       setErrorMessage("");
     } else {
-      setErrorMessage("min values is " + minCount);
+      setErrorMessage(`Min value is ${minCount}`);
     }
   };
+
   return (
     <tbody>
       <tr>
@@ -71,7 +74,8 @@ const InputCounter = ({
           <button onClick={increment}>+</button>
         </td>
       </tr>
-      <tr>
+
+      <tr style={{ position: "relative" }}>
         <td
           className="input-error-message"
           style={{ visibility: errorMessage ? "visible" : "hidden" }}

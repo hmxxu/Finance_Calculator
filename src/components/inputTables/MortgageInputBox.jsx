@@ -105,7 +105,9 @@ const MortgageInputBox = ({
   return (
     <div style={{ position: "relative" }}>
       <table className="input-table">
-        <InputHeader header="Mortgage Calculator" />
+        <InputHeader
+          header={homePage ? "Mortgage Inputs" : "Mortgage Calculator"}
+        />
         {inputValues.priceType === "normal" || !homePage ? (
           <Input
             name="price"

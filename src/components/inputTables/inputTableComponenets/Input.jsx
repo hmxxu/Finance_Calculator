@@ -128,7 +128,7 @@ const Input = ({
           </td>
         )}
       </tr>
-      <tr>
+      <tr style={{ position: "relative" }}>
         <td
           className="input-error-message"
           style={{ visibility: invalidInput ? "visible" : "hidden" }}

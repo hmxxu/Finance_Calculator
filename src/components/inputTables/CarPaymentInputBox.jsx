@@ -36,7 +36,7 @@ const CarPaymentInputBox = ({
       }
       setInputsValid(true);
     }
-  }, [inputValues, homePage, setCarPaymentInputs]);
+  }, [inputValues, homePage]);
 
   const handleInputChange = (name, value) => {
     setInputValues({
@@ -66,7 +66,9 @@ const CarPaymentInputBox = ({
 
   return (
     <table className="input-table">
-      <InputHeader header="Car Payment Calculator" />
+      <InputHeader
+        header={homePage ? "Car Payment Inputs" : "Car Payment Calculator"}
+      />
       <Input
         name="price"
         leftText="Car Price"
@@ -156,7 +158,7 @@ const CarPaymentInputBox = ({
           inputValue={getInflatedPrice()}
         />
       )}
-      <InputError visible={inputsValid} text="Invalid Input" />
+      <InputError visible={!inputsValid} text="Invalid Inputss" />
       {!homePage && (
         <InputButton
           calcOnClick={calculateButton}
