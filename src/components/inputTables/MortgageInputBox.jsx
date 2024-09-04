@@ -11,6 +11,7 @@ const MortgageInputBox = ({
   setMortgageData,
   homePage = false,
   currentAge,
+  lifeExpetency,
 }) => {
   const [inputValues, setInputValues] = useState({
     price: 600000,
@@ -49,7 +50,9 @@ const MortgageInputBox = ({
     if (inputs.some((input) => isNaN(input) || input === null)) {
       setErrorMessage("Invalid Input");
     } else if (currentAge > startAge) {
-      setErrorMessage("Current Age must be less start age");
+      setErrorMessage("Current Age must be less mortgage start age");
+    } else if (homePage && startAge + term > lifeExpetency) {
+      setErrorMessage("Mortgage must end before life expentency");
     } else {
       if (homePage) {
         setMortgageData(inputValues);
@@ -279,6 +282,7 @@ MortgageInputBox.propTypes = {
   setMortgageData: PropTypes.func.isRequired,
   homePage: PropTypes.bool,
   currentAge: PropTypes.number,
+  lifeExpetency: PropTypes.number,
 };
 
 export default MortgageInputBox;

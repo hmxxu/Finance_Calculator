@@ -17,7 +17,8 @@ function taxIncome(income) {
   return income * bracket.rate;
 }
 
-function calculateResults(rd, md, cds) {
+function calculateResults(rd, md, cds, marriageD) {
+  console.log(marriageD);
   // How much $ you have to pay at every year
   const agePayment = new Map();
   for (let age = 0; age < 150; age++) {
@@ -45,7 +46,7 @@ function calculateResults(rd, md, cds) {
         md2.priceType = "normal";
         md2.price = mid;
 
-        const res = calculateResults(rd, md2, cds)[0];
+        const res = calculateResults(rd, md2, cds, marriageD)[0];
 
         if (res[res.length - 1][5] < 0) {
           high = mid - 1;
@@ -136,6 +137,10 @@ function calculateResults(rd, md, cds) {
     // Simulate working/investing years
     if (age < rd.retirementAge) {
       savings += savings * investReturnRate; // Yearly invesetment return
+      if (marriageD.included) {
+        if (marriageD.marriageAge === age) savings += marriageD.savings;
+        savings += marriageD.yearlyContribution;
+      }
       contribution = income * yearlyContribution;
       savings += contribution; // Yearly contribution
       income += income * incomeIncrease; // Year income increase

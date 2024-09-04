@@ -12,12 +12,14 @@ import useMediaQuery from "../hooks/useMediaQuery";
 import InputButton from "../components/inputTables/inputTableComponenets/InputButton";
 import AdditionCarLoans from "../components/AdditionCarLoans";
 import FilledCarPaymentInputBox from "../components/inputTables/FilledCarPaymentInputBox";
+import MarriageInputBox from "../components/inputTables/MarriageInputBox";
 
 const Home = () => {
   const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
   const [retirementData, setRetirementData] = useState(null);
 
   const [mortgageData, setMortgageData] = useState(null);
+  const [marriageData, setMarriageData] = useState(null);
   const [results, setResults] = useState(null);
 
   const [carPaymentData, setCarPaymentData] = useState([]);
@@ -30,7 +32,12 @@ const Home = () => {
   function calculateButton() {
     const carLoanData =
       carLoanType === "normal" ? carPaymentData : carIntervalData;
-    const res = calculateResults(retirementData, mortgageData, carLoanData);
+    const res = calculateResults(
+      retirementData,
+      mortgageData,
+      carLoanData,
+      marriageData
+    );
     setResults(res);
   }
 
@@ -133,7 +140,19 @@ const Home = () => {
                 setMortgageData={setMortgageData}
                 homePage={true}
                 currentAge={retirementData ? retirementData.currentAge : 0}
+                lifeExpetency={
+                  retirementData ? retirementData.lifeExpectancy : 0
+                }
               />
+              <div>
+                <MarriageInputBox
+                  setMarriageData={setMarriageData}
+                  currentAge={retirementData ? retirementData.currentAge : 0}
+                  lifeExpetency={
+                    retirementData ? retirementData.lifeExpectancy : 0
+                  }
+                />
+              </div>
             </div>
           </div>
           <div
@@ -175,6 +194,9 @@ const Home = () => {
                       homePage={true}
                       currentAge={
                         retirementData ? retirementData.currentAge : 0
+                      }
+                      lifeExpetency={
+                        retirementData ? retirementData.lifeExpectancy : 0
                       }
                     />
                   ))

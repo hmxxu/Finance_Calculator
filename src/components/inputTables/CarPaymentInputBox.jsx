@@ -11,30 +11,36 @@ const CarPaymentInputBox = ({
   setCarPaymentInputs,
   homePage = false,
   currentAge,
-  initialValues = {},
+  lifeExpetency,
 }) => {
   const [inputValues, setInputValues] = useState({
-    price: initialValues.price || 45000,
-    term: initialValues.term || 60,
-    interest: initialValues.interest || 6.89,
-    downPayment: initialValues.downPayment || 20,
-    salesTax: initialValues.salesTax || 8.52,
-    fees: initialValues.fees || 2300,
-    startAge: initialValues.startAge || 23,
-    inflation: initialValues.inflation || 3.7,
+    price: 45000,
+    term: 60,
+    interest: 6.89,
+    downPayment: 20,
+    salesTax: 8.52,
+    fees: 2300,
+    startAge: 23,
+    inflation: 3.7,
   });
 
-  const [inputsValid, setInputsValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
+    const { startAge, term } = inputValues;
+
     const inputs = Object.values(inputValues);
     if (inputs.some((input) => isNaN(input) || input === null)) {
-      setInputsValid(false);
+      setErrorMessage("Invalid Input");
+    } else if (homePage && startAge < currentAge) {
+      setErrorMessage("Current Age must be less car loan start age");
+    } else if (homePage && lifeExpetency < startAge + Math.ceil(term / 12)) {
+      setErrorMessage("Car loan must end before life expentency");
     } else {
       if (homePage) {
         setCarPaymentInputs(inputValues);
       }
-      setInputsValid(true);
+      setErrorMessage("");
     }
   }, [inputValues, homePage]);
 
@@ -46,7 +52,7 @@ const CarPaymentInputBox = ({
   };
 
   function calculateButton() {
-    if (!inputsValid) return;
+    if (errorMessage !== "") return;
     setCarPaymentInputs(inputValues);
   }
 
@@ -158,7 +164,7 @@ const CarPaymentInputBox = ({
           inputValue={getInflatedPrice()}
         />
       )}
-      <InputError visible={!inputsValid} text="Invalid Inputss" />
+      <InputError visible={errorMessage !== ""} text={errorMessage} />
       {!homePage && (
         <InputButton
           calcOnClick={calculateButton}
@@ -173,6 +179,7 @@ CarPaymentInputBox.propTypes = {
   setCarPaymentInputs: PropTypes.func.isRequired,
   homePage: PropTypes.bool,
   currentAge: PropTypes.number,
+  lifeExpetency: PropTypes.number,
 };
 
 export default CarPaymentInputBox;
