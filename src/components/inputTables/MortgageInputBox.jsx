@@ -6,6 +6,8 @@ import Input from "./inputTableComponenets/Input";
 import InputButton from "./inputTableComponenets/InputButton";
 import InputRadioButton from "./inputTableComponenets/InputRadioButtons";
 import FilledInput from "./inputTableComponenets/FilledInput";
+import InputError from "./inputTableComponenets/InputError";
+import IncludeExcludeButtons from "./inputTableComponenets/IncludeExcludeButtons";
 
 const MortgageInputBox = ({
   setMortgageData,
@@ -210,24 +212,7 @@ const MortgageInputBox = ({
             </tr>
           </tbody>
         )}
-        <tbody>
-          <tr>
-            <td>
-              <div
-                className="input-error-message"
-                style={{
-                  visibility: errorMessage ? "visible" : "hidden",
-                  display: "flex",
-                  justifyContent: "center",
-                  width: "100%",
-                  marginTop: "5px",
-                }}
-              >
-                <div>{errorMessage}</div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+        <InputError visible={errorMessage !== ""} text={errorMessage} />
         {homePage && (
           <tbody>
             <tr>
@@ -236,33 +221,7 @@ const MortgageInputBox = ({
           </tbody>
         )}
         {homePage ? (
-          <tbody style={{ position: "relative", zIndex: 2 }}>
-            <tr>
-              <td colSpan="5">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "1rem",
-                    marginTop: "5px",
-                  }}
-                >
-                  <button
-                    className="calculate-button"
-                    onClick={() => setIncluded(true)}
-                  >
-                    Include
-                  </button>
-                  <button
-                    className="reset-button"
-                    onClick={() => setIncluded(false)}
-                  >
-                    Exclude
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
+          <IncludeExcludeButtons setIncluded={setIncluded} />
         ) : (
           <InputButton
             calcOnClick={calculateButton}

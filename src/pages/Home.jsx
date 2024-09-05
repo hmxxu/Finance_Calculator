@@ -111,7 +111,7 @@ const Home = () => {
             paddingTop: "2rem",
           }}
         >
-          {/* Retirement, Mortgage, Addition Assets inputs */}
+          {/* Retirement and Mortgage */}
           <div
             style={{
               justifyContent: "center",
@@ -120,14 +120,14 @@ const Home = () => {
               gap: "2rem",
             }}
           >
-            {/* Left Side (Retirement input)*/}
-            <div>
+            {/* Left Side (Retirement inputs)*/}
+            <div style={{ display: "flex" }}>
               <RetirementInputBox
                 setRetirementData={setRetirementData}
                 homePage={true}
               />
             </div>
-            {/* Right Side (Mortgage and Addition Assets inputs)*/}
+            {/* Right Side (Mortgage inputs*/}
             <div
               style={{
                 display: "flex",
@@ -136,17 +136,10 @@ const Home = () => {
                 width: isAboveMediumScreens ? "" : "100%",
               }}
             >
-              <MortgageInputBox
-                setMortgageData={setMortgageData}
-                homePage={true}
-                currentAge={retirementData ? retirementData.currentAge : 0}
-                lifeExpetency={
-                  retirementData ? retirementData.lifeExpectancy : 0
-                }
-              />
               <div>
-                <MarriageInputBox
-                  setMarriageData={setMarriageData}
+                <MortgageInputBox
+                  setMortgageData={setMortgageData}
+                  homePage={true}
                   currentAge={retirementData ? retirementData.currentAge : 0}
                   lifeExpetency={
                     retirementData ? retirementData.lifeExpectancy : 0
@@ -155,19 +148,49 @@ const Home = () => {
               </div>
             </div>
           </div>
+          {/* Marriage and Addition Assets */}
           <div
             style={{
               display: "flex",
+              alignItems: "center",
+              alignContent: "center",
               marginLeft: "auto",
               marginRight: "auto",
-              width: isAboveMediumScreens ? "400px" : "95%",
+              width: "100%",
+              gap: "2rem",
+              flexDirection: isAboveMediumScreens ? "row" : "column",
             }}
           >
-            <AdditionCarLoans
-              setCarLoanType={setCarLoanType}
-              setCarLoanCount={setCarLoanCount}
-              setCDInterval={createCDInterval}
-            />
+            {/* Left Side (Marriage inputs)*/}
+            <div
+              style={{
+                width: "100%",
+                display: isAboveMediumScreens ? "flex" : "",
+                justifyContent: "flex-end",
+              }}
+            >
+              <MarriageInputBox
+                setMarriageData={setMarriageData}
+                currentAge={retirementData ? retirementData.currentAge : 0}
+                lifeExpetency={
+                  retirementData ? retirementData.lifeExpectancy : 0
+                }
+              />
+            </div>
+            {/* Right Side (Addition Assets inputs*/}
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "flex-start",
+              }}
+            >
+              <AdditionCarLoans
+                setCarLoanType={setCarLoanType}
+                setCarLoanCount={setCarLoanCount}
+                setCDInterval={createCDInterval}
+              />
+            </div>
           </div>
           {/* Car Input boxes */}
           {((carLoanType === "normal" && carLoanCount > 0) ||

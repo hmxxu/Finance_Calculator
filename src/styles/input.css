@@ -77,12 +77,9 @@
 
 .inputs-error-message {
   color: red;
-  transform: translateY(50%);
   font: caption;
   font-size: 12px;
-  padding-top: 0px;
-  padding-bottom: 0px;
-  text-align: center;
+  /* text-align: center; */
   pointer-events: none;
 }
 

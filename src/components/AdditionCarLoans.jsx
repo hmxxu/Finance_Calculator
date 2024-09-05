@@ -44,12 +44,7 @@ const AdditionCarLoans = ({
   };
 
   return (
-    <table
-      className="input-table"
-      style={{
-        width: "100%",
-      }}
-    >
+    <table className="input-table">
       <InputHeader header="Addition Assets" />
       <InputRadioButton
         header="Amount of Cars"

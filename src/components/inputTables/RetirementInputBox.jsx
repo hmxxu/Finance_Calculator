@@ -26,7 +26,9 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
     const { currentAge, retirementAge, lifeExpectancy } = inputValues;
     const inputs = Object.values(inputValues);
 
-    if (retirementAge >= lifeExpectancy) {
+    if (inputs.some((input) => isNaN(input) || input === null)) {
+      setErrorMessage("Invalid Input");
+    } else if (retirementAge >= lifeExpectancy) {
       setErrorMessage(
         "Retirement age can't be greater or equal to life expectancy"
       );
@@ -34,8 +36,6 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
       setErrorMessage(
         "Current age can't be greater or equal to retirement age"
       );
-    } else if (inputs.some((input) => isNaN(input) || input === null)) {
-      setErrorMessage("Invalid Input");
     } else {
       if (homePage) {
         setRetirementData(inputValues);
@@ -197,32 +197,19 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
       />
       <tbody>
         <tr>
-          <td style={{ paddingTop: "5px" }}></td>
-        </tr>
-      </tbody>
-      <tbody>
-        <tr>
-          <td colSpan="5">
-            <div
-              className="input-error-message"
-              style={{
-                visibility: errorMessage ? "visible" : "hidden",
-                width: "466px",
-              }}
-            >
-              <div
-                style={{
-                  position: "absolute",
-                  textAlign: "center",
-                  width: "100%",
-                }}
-              >
-                {errorMessage}
-              </div>
-            </div>
+          <td
+            colSpan="5"
+            style={{
+              textAlign: "center",
+              visibility: errorMessage !== "" ? "visible" : "hidden",
+              width: "100%",
+            }}
+          >
+            <div className="inputs-error-message">{errorMessage}</div>
           </td>
         </tr>
       </tbody>
+
       {!homePage && (
         <InputButton
           calcOnClick={calculateButton}

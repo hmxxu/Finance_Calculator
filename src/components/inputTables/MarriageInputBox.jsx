@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import InputHeader from "./inputTableComponenets/InputHeader";
 import Input from "./inputTableComponenets/Input";
+import InputError from "./inputTableComponenets/InputError";
+import IncludeExcludeButtons from "./inputTableComponenets/IncludeExcludeButtons";
 
 const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
   const [inputValues, setInputValues] = useState({
@@ -76,24 +78,7 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
           onInputChange={handleInputChange}
           maxValue={1000000}
         />
-        <tbody>
-          <tr>
-            <td>
-              <div
-                className="input-error-message"
-                style={{
-                  visibility: errorMessage ? "visible" : "hidden",
-                  display: "flex",
-                  justifyContent: "center",
-                  width: "100%",
-                  marginTop: "5px",
-                }}
-              >
-                <div>{errorMessage}</div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+        <InputError visible={errorMessage !== ""} text={errorMessage} />
 
         <tbody>
           <tr>
@@ -101,33 +86,7 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
           </tr>
         </tbody>
 
-        <tbody style={{ position: "relative", zIndex: 2 }}>
-          <tr>
-            <td colSpan="5">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: "1rem",
-                  marginTop: "5px",
-                }}
-              >
-                <button
-                  className="calculate-button"
-                  onClick={() => setIncluded(true)}
-                >
-                  Include
-                </button>
-                <button
-                  className="reset-button"
-                  onClick={() => setIncluded(false)}
-                >
-                  Exclude
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+        <IncludeExcludeButtons setIncluded={setIncluded} />
       </table>
       <div
         className="overlay"
