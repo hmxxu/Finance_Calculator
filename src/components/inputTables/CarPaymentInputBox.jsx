@@ -20,7 +20,7 @@ const CarPaymentInputBox = ({
     downPayment: 20,
     salesTax: 8.52,
     fees: 2300,
-    startAge: 23,
+    startAge: 26,
     inflation: 3.7,
   });
 

@@ -10,22 +10,26 @@ import InvestmentGraph from "../components/InvestmentGraph";
 import ResultsTable from "../components/ResultsTable";
 import useMediaQuery from "../hooks/useMediaQuery";
 import InputButton from "../components/inputTables/inputTableComponenets/InputButton";
-import AdditionCarLoans from "../components/AdditionCarLoans";
+import AdditionCarLoans from "../components/inputTables/AdditionCarLoans";
 import FilledCarPaymentInputBox from "../components/inputTables/FilledCarPaymentInputBox";
 import MarriageInputBox from "../components/inputTables/MarriageInputBox";
+import MontlyExpensesInputBox from "../components/inputTables/MontlyExpensesInputBox";
+import InputError from "../components/inputTables/inputTableComponenets/InputError";
 
 const Home = () => {
   const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
   const [retirementData, setRetirementData] = useState(null);
-
   const [mortgageData, setMortgageData] = useState(null);
   const [marriageData, setMarriageData] = useState(null);
+  const [monthlyExpensesData, setMonthlyExpensesData] = useState(null);
+
   const [results, setResults] = useState(null);
 
   const [carPaymentData, setCarPaymentData] = useState([]);
+  const [carIntervalData, setCarIntervalData] = useState([]);
+
   const [carLoanCount, setCarLoanCount] = useState(0);
   const [carLoanType, setCarLoanType] = useState("normal");
-  const [carIntervalData, setCarIntervalData] = useState([]);
 
   const [lastAssetInputs, setLastAssetInputs] = useState(null);
 
@@ -36,8 +40,10 @@ const Home = () => {
       retirementData,
       mortgageData,
       carLoanData,
-      marriageData
+      marriageData,
+      monthlyExpensesData
     );
+
     setResults(res);
   }
 
@@ -54,7 +60,7 @@ const Home = () => {
     if (carLoanCount < carPaymentData.length) {
       setCarPaymentData((prevData) => prevData.slice(0, carLoanCount));
     }
-  }, [carPaymentData]);
+  }, [carPaymentData, carLoanCount]);
 
   function createCDInterval(inputs) {
     if (
@@ -111,7 +117,7 @@ const Home = () => {
             paddingTop: "2rem",
           }}
         >
-          {/* Retirement and Mortgage */}
+          {/* Retirement, Mortgage, Marriage, Monthly Expenses */}
           <div
             style={{
               justifyContent: "center",
@@ -120,14 +126,33 @@ const Home = () => {
               gap: "2rem",
             }}
           >
-            {/* Left Side (Retirement inputs)*/}
-            <div style={{ display: "flex" }}>
-              <RetirementInputBox
-                setRetirementData={setRetirementData}
-                homePage={true}
-              />
+            {/* Left Side (Retirement and Marriage)*/}
+            <div
+              style={{
+                justifyContent: "center",
+                display: "flex",
+                flexDirection: "column",
+                gap: "2rem",
+              }}
+            >
+              <div>
+                <RetirementInputBox
+                  setRetirementData={setRetirementData}
+                  homePage={true}
+                />
+              </div>
+              <div>
+                <MarriageInputBox
+                  setMarriageData={setMarriageData}
+                  currentAge={retirementData ? retirementData.currentAge : 0}
+                  lifeExpetency={
+                    retirementData ? retirementData.lifeExpectancy : 0
+                  }
+                />
+              </div>
             </div>
-            {/* Right Side (Mortgage inputs*/}
+
+            {/* Right Side (Mortgage and Monthly Expenses*/}
             <div
               style={{
                 display: "flex",
@@ -146,51 +171,27 @@ const Home = () => {
                   }
                 />
               </div>
+              <div style={{ width: "100%" }}>
+                <MontlyExpensesInputBox
+                  setMonthlyExpensesData={setMonthlyExpensesData}
+                />
+              </div>
             </div>
           </div>
-          {/* Marriage and Addition Assets */}
+          {/* Addition Assets */}
           <div
             style={{
               display: "flex",
-              alignItems: "center",
-              alignContent: "center",
-              marginLeft: "auto",
-              marginRight: "auto",
+              justifyContent: "center",
               width: "100%",
-              gap: "2rem",
               flexDirection: isAboveMediumScreens ? "row" : "column",
             }}
           >
-            {/* Left Side (Marriage inputs)*/}
-            <div
-              style={{
-                width: "100%",
-                display: isAboveMediumScreens ? "flex" : "",
-                justifyContent: "flex-end",
-              }}
-            >
-              <MarriageInputBox
-                setMarriageData={setMarriageData}
-                currentAge={retirementData ? retirementData.currentAge : 0}
-                lifeExpetency={
-                  retirementData ? retirementData.lifeExpectancy : 0
-                }
-              />
-            </div>
-            {/* Right Side (Addition Assets inputs*/}
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "flex-start",
-              }}
-            >
-              <AdditionCarLoans
-                setCarLoanType={setCarLoanType}
-                setCarLoanCount={setCarLoanCount}
-                setCDInterval={createCDInterval}
-              />
-            </div>
+            <AdditionCarLoans
+              setCarLoanType={setCarLoanType}
+              setCarLoanCount={setCarLoanCount}
+              setCDInterval={createCDInterval}
+            />
           </div>
           {/* Car Input boxes */}
           {((carLoanType === "normal" && carLoanCount > 0) ||
@@ -242,6 +243,13 @@ const Home = () => {
               width: isAboveMediumScreens ? "100%" : "95%",
             }}
           >
+            <InputError
+              visible={
+                results !== null && results[0][results[0].length - 1][5] < 0
+              }
+              text="Cannot afford payments, consider increasing income or decreases expenses or assets"
+            />
+            <tbody style={{ height: "10px" }} />
             <InputButton
               calcOnClick={calculateButton}
               resetOnClick={() => window.location.reload()}

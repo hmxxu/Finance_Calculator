@@ -16,11 +16,11 @@ const MortgageInputBox = ({
   lifeExpetency,
 }) => {
   const [inputValues, setInputValues] = useState({
-    price: 600000,
-    downPayment: 17,
+    price: 250000,
+    downPayment: 20,
     term: 30,
-    interest: 5.88,
-    startAge: 37,
+    interest: 6.25,
+    startAge: 35,
     priceType: "normal",
     inflation: 3.67,
     included: true,

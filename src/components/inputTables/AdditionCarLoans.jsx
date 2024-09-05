@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import InputHeader from "./inputTables/inputTableComponenets/InputHeader";
-import InputRadioButton from "./inputTables/inputTableComponenets/InputRadioButtons";
-import InputCounter from "./inputTables/inputTableComponenets/InputCounter";
-import Input from "./inputTables/inputTableComponenets/Input";
-import InputError from "./inputTables/inputTableComponenets/InputError";
+import InputHeader from "./inputTableComponenets/InputHeader";
+import InputRadioButton from "./inputTableComponenets/InputRadioButtons";
+import InputCounter from "./inputTableComponenets/InputCounter";
+import Input from "./inputTableComponenets/Input";
+import InputError from "./inputTableComponenets/InputError";
 
 const AdditionCarLoans = ({
   setCarLoanType,
@@ -13,6 +13,7 @@ const AdditionCarLoans = ({
 }) => {
   const [inputType, setInputType] = useState("normal");
   const [inputsValid, setInputsValid] = useState(true);
+  const [carCount, setCarCount] = useState(0);
 
   const [inputValues, setInputValues] = useState({
     xYears: 10,
@@ -61,7 +62,11 @@ const AdditionCarLoans = ({
       {inputType === "normal" ? (
         <InputCounter
           leftText="Number of Car Loans"
-          setCounter={setCarLoanCount}
+          defaultValue={carCount}
+          setCounter={(val) => {
+            setCarLoanCount(val);
+            setCarCount(val);
+          }}
           minCount={0}
           maxCount={12}
         />

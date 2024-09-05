@@ -15,8 +15,9 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
     incomeIncrease: 3.58,
     retirementIncomeNeeded: 80000,
     investReturnRate: 10.16,
-    savings: 10000,
-    yearlyContribution: 40,
+    savings: 5000,
+    checking: 5000,
+    yearlyContribution: 20,
     retirementIncome: 25000,
   });
 
@@ -170,6 +171,15 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
         leftText="Current Retirement Savings"
         leftlabelText="$"
         defaultInput={inputValues.savings}
+        onInputChange={handleInputChange}
+        maxValue={1000000}
+        allowDecimal={false}
+      />
+      <Input
+        name="checking"
+        leftText="Current Checking Balance"
+        leftlabelText="$"
+        defaultInput={inputValues.checking}
         onInputChange={handleInputChange}
         maxValue={1000000}
         allowDecimal={false}

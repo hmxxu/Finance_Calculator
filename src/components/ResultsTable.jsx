@@ -19,7 +19,7 @@ const ResultsTable = ({ header, results, resetOnClick }) => {
               <td
                 style={{
                   paddingRight: "20px",
-                  borderBottom: "2px solid #ababab",
+                  borderBottom: "2px solid #d6d6d6",
                 }}
               >
                 {label}:
@@ -27,7 +27,7 @@ const ResultsTable = ({ header, results, resetOnClick }) => {
               <td
                 style={{
                   paddingRight: "10px",
-                  borderBottom: "2px solid #ababab",
+                  borderBottom: "2px solid #d6d6d6",
                 }}
               >
                 {typeof value === "number" ? formatToMoney(value) : value}

@@ -10,7 +10,7 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
   const [inputValues, setInputValues] = useState({
     marriageAge: 30,
     savings: 100000,
-    yearlyContribution: 60000,
+    yearlyContribution: 12000,
     included: true,
   });
 

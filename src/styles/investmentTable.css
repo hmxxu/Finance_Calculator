@@ -1,7 +1,7 @@
 .investment-table {
   margin-top: 20px;
   margin-bottom: 20px;
-  border: 2px solid black !important;
+  border: solid 1px #bbbbbb;
   margin-left: auto;
   margin-right: auto;
   border-collapse: collapse;
@@ -20,8 +20,14 @@
 
 .investment-table-col-header td {
   font-weight: bold;
-  border-bottom: 2px solid black;
+  background-color: #336699;
+  color: white;
+  border-bottom: solid 1px #bbbbbb;
   margin: auto;
+}
+
+.investment-table tbody tr:nth-child(even) {
+  background-color: #f0f0f0; /* Gray background for even rows */
 }
 
 @media (max-width: 768px) {
