@@ -39,7 +39,7 @@ const MontlyExpensesInputBox = ({ setMonthlyExpensesData }) => {
 
   function calcTotal() {
     const inputs = Object.values(inputValues);
-    if (inputs.some((input) => isNaN(input) || input === null)) return;
+    if (inputs.some((input) => isNaN(input) || input === null)) return 0;
     const total = inputs.reduce((acc, curr) => acc + Number(curr), 0);
 
     return total;

@@ -109,7 +109,7 @@ const InvestmentInputBox = ({ setInvestmentData }) => {
         maxValue={15}
         allowDecimal={true}
       />
-      <InputError visible={inputsValid} text="Invalid Input" />
+      <InputError visible={!inputsValid} text="Invalid Input" />
       <InputButton
         calcOnClick={calculateButton}
         resetOnClick={() => window.location.reload()}

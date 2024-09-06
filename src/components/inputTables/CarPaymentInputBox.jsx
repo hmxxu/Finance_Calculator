@@ -165,11 +165,13 @@ const CarPaymentInputBox = ({
         />
       )}
       <InputError visible={errorMessage !== ""} text={errorMessage} />
-      {!homePage && (
+      {!homePage ? (
         <InputButton
           calcOnClick={calculateButton}
           resetOnClick={() => window.location.reload()}
         />
+      ) : (
+        <tbody style={{ height: "15px" }} />
       )}
     </table>
   );

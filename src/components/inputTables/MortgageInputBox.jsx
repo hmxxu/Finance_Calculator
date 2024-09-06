@@ -61,7 +61,7 @@ const MortgageInputBox = ({
       }
       setErrorMessage("");
     }
-  }, [inputValues, currentAge, homePage, setMortgageData]);
+  }, [inputValues, currentAge, lifeExpetency, homePage, setMortgageData]);
 
   const handleInputChange = (name, value) => {
     setInputValues({
@@ -220,8 +220,12 @@ const MortgageInputBox = ({
             </tr>
           </tbody>
         )}
+
         {homePage ? (
-          <IncludeExcludeButtons setIncluded={setIncluded} />
+          <React.Fragment>
+            <tbody style={{ height: "15px" }} />
+            <IncludeExcludeButtons setIncluded={setIncluded} />
+          </React.Fragment>
         ) : (
           <InputButton
             calcOnClick={calculateButton}

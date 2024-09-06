@@ -3,7 +3,14 @@ import PropTypes from "prop-types";
 
 const IncludeExcludeButtons = ({ setIncluded }) => {
   return (
-    <tbody style={{ position: "relative", zIndex: 2 }}>
+    <tbody
+      style={{
+        position: "relative",
+        zIndex: 2,
+        opacity: "100% !important",
+        pointerEvents: "all",
+      }}
+    >
       <tr>
         <td colSpan="5">
           <div

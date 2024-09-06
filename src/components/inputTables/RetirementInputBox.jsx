@@ -5,6 +5,7 @@ import InputHeader from "./inputTableComponenets/InputHeader";
 import Input from "./inputTableComponenets/Input";
 import InputButton from "./inputTableComponenets/InputButton";
 import FilledInput from "./inputTableComponenets/FilledInput";
+import InputError from "./inputTableComponenets/InputError";
 
 const RetirementInputBox = ({ setRetirementData, homePage }) => {
   const [inputValues, setInputValues] = useState({
@@ -14,7 +15,7 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
     income: 60000,
 
     incomeIncrease: 3.58,
-    investReturnRate: 10.16,
+    investReturnRate: 7.56,
 
     savings: 5000,
     savingsContribution: 20,
@@ -176,25 +177,29 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
         maxValue={100}
         allowDecimal={true}
       />
-      <Input
-        name="checking"
-        leftText="Current Checking Balance"
-        infoText="This account will be drawn from for monthly expenses and monthly car and mortgage payments"
-        leftlabelText="$"
-        defaultInput={inputValues.checking}
-        onInputChange={handleInputChange}
-        maxValue={1000000}
-      />
-      <Input
-        name="checkingContribution"
-        leftText="Yearly Checking Contribution"
-        defaultInput={inputValues.checkingContribution}
-        rightlabelText="%"
-        rightText="/year"
-        onInputChange={handleInputChange}
-        maxValue={100}
-        allowDecimal={true}
-      />
+      {homePage && (
+        <Input
+          name="checking"
+          leftText="Current Checking Balance"
+          infoText="This account will be drawn from for monthly expenses and monthly car and mortgage payments"
+          leftlabelText="$"
+          defaultInput={inputValues.checking}
+          onInputChange={handleInputChange}
+          maxValue={1000000}
+        />
+      )}
+      {homePage && (
+        <Input
+          name="checkingContribution"
+          leftText="Yearly Checking Contribution"
+          defaultInput={inputValues.checkingContribution}
+          rightlabelText="%"
+          rightText="/year"
+          onInputChange={handleInputChange}
+          maxValue={100}
+          allowDecimal={true}
+        />
+      )}
       <tbody style={{ height: "5px" }} />
       <InputHeader header="Retirement Assumptions" />
       <Input
@@ -217,27 +222,14 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
         infoText="This is any other income durning retire (social security, pension, etc)"
         maxValue={1000000}
       />
-
-      <tbody>
-        <tr>
-          <td
-            colSpan="5"
-            style={{
-              textAlign: "center",
-              visibility: errorMessage !== "" ? "visible" : "hidden",
-              width: "100%",
-            }}
-          >
-            <div className="inputs-error-message">{errorMessage}</div>
-          </td>
-        </tr>
-      </tbody>
-
-      {!homePage && (
+      <InputError visible={errorMessage !== ""} text={errorMessage} />
+      {!homePage ? (
         <InputButton
           calcOnClick={calculateButton}
           resetOnClick={() => window.location.reload()}
         />
+      ) : (
+        <tbody style={{ height: "15px" }} />
       )}
     </table>
   );

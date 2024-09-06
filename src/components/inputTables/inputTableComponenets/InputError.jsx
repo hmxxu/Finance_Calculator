@@ -5,21 +5,24 @@ const InputError = ({ visible, text }) => {
   return (
     <tbody
       style={{
-        display: "table",
-        visibility: visible ? "visible" : "hidden",
-        position: "absolute",
-        transform: "translateY(-20%)",
-        width: "100%", // Ensure the tbody takes up the full width
+        position: "relative",
+        width: "100%",
       }}
     >
       <tr>
         <td
+          colSpan={5}
           style={{
-            textAlign: "center", // Center horizontally
-            width: "100%", // Ensure the cell takes the full width
+            position: "relative",
+            textAlign: "center",
           }}
         >
-          <div className="inputs-error-message">{text}</div>
+          <div
+            className="inputs-error-message"
+            style={{ visibility: visible ? "visible" : "hidden" }}
+          >
+            {text}
+          </div>
         </td>
       </tr>
     </tbody>

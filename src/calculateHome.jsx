@@ -21,27 +21,27 @@ function calcInflatedPrice(value, inflationRate, years) {
   return value * (1 + inflationRate) ** years;
 }
 
+function addPayment(map, age, value) {
+  map.set(age, map.get(age) + value);
+}
+
 function calculateResults(rd, md, cds, mad, med) {
   // How much $ in mortgage and car payments at each year
-  const agePayment = new Map();
+  const paymentAtAge = new Map(
+    Array.from({ length: 150 }, (_, age) => [age, 0])
+  );
   // How much $ in mortgage and car down payments at each year
-  const ageDownPayment = new Map();
-  for (let age = 0; age < 150; age++) {
-    agePayment.set(age, 0);
-    ageDownPayment.set(age, 0);
-  }
-
-  function addPayment(map, age, value) {
-    map.set(age, agePayment.get(age) + value);
-  }
+  const downPaymentAtAge = new Map(
+    Array.from({ length: 150 }, (_, age) => [age, 0])
+  );
 
   let housePrice = md.price;
   let mortgageMonthlyPayment;
 
   // Add mortgage payment is included
   if (md.included) {
+    // Use 2 pointer algorithm to find max house price
     if (md.priceType === "max") {
-      // Use 2 pointer algorithm to find max house price
       let low = 0;
       let high = 100000000;
       housePrice = low;
@@ -52,9 +52,11 @@ function calculateResults(rd, md, cds, mad, med) {
         md2.priceType = "normal";
         md2.price = mid;
 
-        const res = calculateResults(rd, md2, cds, mad, med)[0];
+        const [res] = calculateResults(rd, md2, cds, mad, med) || [];
+        const lastRow = res?.[res.length - 1];
+        const [checkingBalance, savingsBalance] = lastRow?.slice(-2) || [];
 
-        if (res && (res[res.length - 1][4] < 0 || res[res.length - 1][5] < 0)) {
+        if (checkingBalance < 0 || savingsBalance < 0) {
           high = mid - 1;
         } else {
           housePrice = mid;
@@ -69,7 +71,7 @@ function calculateResults(rd, md, cds, mad, med) {
       md.startAge - rd.currentAge
     );
     const downPaymentValue = (md.downPayment / 100) * inflatedPrice;
-    addPayment(ageDownPayment, md.startAge, downPaymentValue);
+    addPayment(downPaymentAtAge, md.startAge, downPaymentValue);
 
     mortgageMonthlyPayment = calcMonthly(
       inflatedPrice - downPaymentValue,
@@ -81,11 +83,12 @@ function calculateResults(rd, md, cds, mad, med) {
     const endAge = startAge + md.term;
 
     for (let age = startAge; age <= endAge; age++) {
-      addPayment(agePayment, age, mortgageMonthlyPayment * 12);
+      addPayment(paymentAtAge, age, mortgageMonthlyPayment * 12);
     }
   }
 
-  let totalCarPayments = 0;
+  // The total amount spend on cars
+  let totalCarPaymentValues = 0;
   // For each car loan add car payments to each year
   cds.forEach((cd) => {
     const inflatedPrice = calcInflatedPrice(
@@ -94,11 +97,15 @@ function calculateResults(rd, md, cds, mad, med) {
       cd.startAge - rd.currentAge
     );
     const downPaymentValue = (cd.downPayment / 100) * inflatedPrice;
-    const upFrontCost =
-      downPaymentValue + cd.fees + (cd.salesTax / 100) * inflatedPrice;
-    totalCarPayments += upFrontCost;
+    addPayment(downPaymentAtAge, cd.startAge, downPaymentValue);
+    addPayment(
+      paymentAtAge,
+      cd.startAge,
+      cd.fees + (cd.salesTax / 100) * inflatedPrice
+    );
 
-    addPayment(ageDownPayment, cd.startAge, upFrontCost);
+    totalCarPaymentValues +=
+      downPaymentValue + cd.fees + (cd.salesTax / 100) * inflatedPrice;
 
     const carLoanMonthlyPayment = calcMonthly(
       inflatedPrice - downPaymentValue,
@@ -106,20 +113,18 @@ function calculateResults(rd, md, cds, mad, med) {
       cd.term
     );
 
-    totalCarPayments += carLoanMonthlyPayment * cd.term;
+    totalCarPaymentValues += carLoanMonthlyPayment * cd.term;
 
     const startAge = cd.startAge;
     const endAge = cd.startAge + Math.ceil(cd.term / 12);
 
     for (let age = startAge; age <= endAge; age++) {
-      let payment = 0;
       if (cd.startAge + Math.ceil(cd.term / 12) === age) {
         // Last year of loan
-        payment = carLoanMonthlyPayment * (cd.term % 12);
+        addPayment(paymentAtAge, age, carLoanMonthlyPayment * (cd.term % 12));
       } else {
-        payment = carLoanMonthlyPayment * 12;
+        addPayment(paymentAtAge, age, carLoanMonthlyPayment * 12);
       }
-      addPayment(agePayment, age, payment);
     }
   });
 
@@ -129,8 +134,9 @@ function calculateResults(rd, md, cds, mad, med) {
     [
       "Age",
       "Income",
+      "Checking Contribution",
+      "Savings Contribution",
       "Mortgage/Car Payment",
-      "Total Investmented",
       "Checking",
       "Savings",
     ],
@@ -143,39 +149,40 @@ function calculateResults(rd, md, cds, mad, med) {
 
   let savings = rd.savings;
   let checking = rd.checking;
-  let totalInvested = savings;
   let canAfford = true;
   const averageInflationRate = 0.03;
 
   for (let age = rd.currentAge; age <= rd.lifeExpectancy; age++) {
+    let totalCheckingContribution = 0;
+    let totalSavingsContribution = 0;
     // Simulate working/investing years
     if (age < rd.retirementAge) {
       // If married
       if (mad.included && age >= mad.marriageAge) {
         // combine checking and savings account with partner
         if (mad.marriageAge === age) {
-          checking += mad.checking;
-          savings += mad.savings;
+          totalCheckingContribution += mad.checking;
+          totalSavingsContribution += mad.savings;
         }
         const adjustedPartnerIncome = calcInflatedPrice(
           partnerIncome,
           incomeIncrease,
           age - rd.currentAge
         );
-        checking += adjustedPartnerIncome * checkingContribution;
+        totalCheckingContribution +=
+          adjustedPartnerIncome * checkingContribution;
         checking -=
           calcInflatedPrice(med, averageInflationRate, age - rd.currentAge) *
           12;
-        savings += adjustedPartnerIncome * savingContribution;
+        totalSavingsContribution += adjustedPartnerIncome * savingContribution;
       }
 
-      checking += income * checkingContribution;
+      totalCheckingContribution += income * checkingContribution;
       checking -=
         calcInflatedPrice(med, averageInflationRate, age - rd.currentAge) * 12;
-      savings += income * savingContribution;
+      checking -= paymentAtAge.get(age);
 
-      checking -= agePayment.get(age);
-      savings += savings * investReturnRate;
+      totalSavingsContribution += income * savingContribution;
     } else {
       // Move all balance from checking to savings when retired
       if (age === rd.retirementAge) {
@@ -183,37 +190,37 @@ function calculateResults(rd, md, cds, mad, med) {
         checking = 0;
         income = 0;
       }
+      // Assuming that partner has the same retirement income and retirement income needed
+      const numPeople = mad.included && age >= mad.marriageAge ? 2 : 1;
       savings -=
         calcInflatedPrice(
           rd.retirementIncomeNeeded,
           averageInflationRate,
           age - rd.currentAge
-        ) + rd.retirementIncome;
-      // Assuming that partner needs the same retirement income and retirement income needed
-      if (mad.included && age >= mad.marriageAge) {
-        savings -=
-          calcInflatedPrice(
-            rd.retirementIncomeNeeded,
-            averageInflationRate,
-            age - rd.currentAge
-          ) + rd.retirementIncome;
-      }
-      savings -= agePayment.get(age);
-      savings += savings * investReturnRate; // If invested money keep compouding durning retirement
+        ) * numPeople;
+      totalSavingsContribution += rd.retirementIncome * numPeople;
+      // Make payments from savings when retired
+      savings -= paymentAtAge.get(age);
     }
 
-    savings -= ageDownPayment.get(age);
+    savings -= downPaymentAtAge.get(age);
+
+    savings += totalSavingsContribution;
+    checking += totalCheckingContribution;
+
+    savings += savings * investReturnRate;
 
     table.push([
       age,
       income,
-      agePayment.get(age) + ageDownPayment.get(age),
-      totalInvested,
+      totalCheckingContribution,
+      totalSavingsContribution,
+      paymentAtAge.get(age) + downPaymentAtAge.get(age),
       checking,
       savings,
     ]);
 
-    income += income * incomeIncrease; // Year income increase
+    income += income * incomeIncrease;
     if (savings < 0 || checking < 0) {
       canAfford = false;
       break;
@@ -255,7 +262,8 @@ function calculateResults(rd, md, cds, mad, med) {
     ]);
   }
 
-  if (cds.length > 0) results.push(["Total in Car Payments", totalCarPayments]);
+  if (cds.length > 0)
+    results.push(["Total in Car Payments", totalCarPaymentValues]);
 
   return [table, results];
 }

@@ -70,11 +70,13 @@ const Home = () => {
     )
       return;
     setLastAssetInputs(inputs);
-    const startAge = retirementData.currentAge;
-    const endAge = retirementData.lifeExpectancy;
     const cdIntervals = [];
     let currentPrice = inputs.startPrice;
-    for (let age = startAge; age <= endAge; age += inputs.xYears) {
+    for (
+      let age = inputs.startAge;
+      age <= retirementData.lifeExpectancy;
+      age += inputs.xYears
+    ) {
       cdIntervals.push({
         price: currentPrice,
         term: 60,
@@ -141,7 +143,7 @@ const Home = () => {
                   homePage={true}
                 />
               </div>
-              <div>
+              <div style={{ display: isAboveMediumScreens ? "flex" : "" }}>
                 <MarriageInputBox
                   setMarriageData={setMarriageData}
                   currentAge={retirementData ? retirementData.currentAge : 0}
@@ -161,7 +163,7 @@ const Home = () => {
                 width: isAboveMediumScreens ? "" : "100%",
               }}
             >
-              <div>
+              <div style={{ display: isAboveMediumScreens ? "flex" : "" }}>
                 <MortgageInputBox
                   setMortgageData={setMortgageData}
                   homePage={true}
@@ -183,7 +185,6 @@ const Home = () => {
             style={{
               display: "flex",
               justifyContent: "center",
-              width: "100%",
               flexDirection: isAboveMediumScreens ? "row" : "column",
             }}
           >
@@ -191,6 +192,8 @@ const Home = () => {
               setCarLoanType={setCarLoanType}
               setCarLoanCount={setCarLoanCount}
               setCDInterval={createCDInterval}
+              currentAge={retirementData ? retirementData.currentAge : 0}
+              lifeExpetency={retirementData ? retirementData.lifeExpectancy : 0}
             />
           </div>
           {/* Car Input boxes */}
@@ -278,8 +281,8 @@ const Home = () => {
                 flexDirection: isAboveMediumScreens ? "row" : "column",
               }}
             >
-              <InvestmentGraph data={results[0]} dataType={4} />
               <InvestmentGraph data={results[0]} dataType={5} />
+              <InvestmentGraph data={results[0]} dataType={6} />
             </div>
             <div style={{ marginLeft: "auto", marginRight: "auto" }}>
               <ResultsTable

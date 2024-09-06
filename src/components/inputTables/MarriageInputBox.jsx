@@ -9,8 +9,8 @@ import IncludeExcludeButtons from "./inputTableComponenets/IncludeExcludeButtons
 const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
   const [inputValues, setInputValues] = useState({
     marriageAge: 30,
-    savings: 100000,
-    checking: 10000,
+    savings: 120000,
+    checking: 35000,
     income: 60000,
     included: true,
   });
@@ -89,13 +89,7 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
           maxValue={1000000}
         />
         <InputError visible={errorMessage !== ""} text={errorMessage} />
-
-        <tbody>
-          <tr>
-            <td style={{ paddingTop: "5px" }}></td>
-          </tr>
-        </tbody>
-
+        <tbody style={{ height: "20px" }} />
         <IncludeExcludeButtons setIncluded={setIncluded} />
       </table>
       <div

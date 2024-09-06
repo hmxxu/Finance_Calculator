@@ -10,26 +10,36 @@ const AdditionCarLoans = ({
   setCarLoanType,
   setCarLoanCount,
   setCDInterval,
+  currentAge,
+  lifeExpetency,
 }) => {
   const [inputType, setInputType] = useState("normal");
-  const [inputsValid, setInputsValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
   const [carCount, setCarCount] = useState(0);
 
   const [inputValues, setInputValues] = useState({
     xYears: 10,
-    startPrice: 34000,
+    startAge: 25,
+    startPrice: 40000,
     priceIncrease: 5000,
   });
 
   useEffect(() => {
+    const { startAge } = inputValues;
     const inputs = Object.values(inputValues);
     if (inputs.some((input) => isNaN(input) || input === null)) {
-      setInputsValid(false);
+      setErrorMessage("Invalid Input");
+    } else if (currentAge > startAge) {
+      setErrorMessage(
+        "Current Age must be less than age of first car purchase"
+      );
+    } else if (startAge > lifeExpetency) {
+      setErrorMessage("Age of first car purchase be before life expentency");
     } else {
       setCDInterval(inputValues);
-      setInputsValid(true);
+      setErrorMessage("");
     }
-  }, [inputValues]);
+  }, [inputValues, currentAge, lifeExpetency]);
 
   function changeInputType(inputType) {
     setInputType(inputType);
@@ -81,13 +91,19 @@ const AdditionCarLoans = ({
             defaultValue={inputValues.xYears}
           />
           <Input
+            name="startAge"
+            leftText="Age of First Car Purchase"
+            defaultInput={inputValues.startAge}
+            onInputChange={handleInputChange}
+            maxValue={150}
+          />
+          <Input
             name="startPrice"
             leftText="First Car Price"
             leftlabelText="$"
             defaultInput={inputValues.startPrice}
             onInputChange={handleInputChange}
             maxValue={1000000}
-            allowDecimal={false}
           />
           <Input
             name="priceIncrease"
@@ -96,14 +112,14 @@ const AdditionCarLoans = ({
             defaultInput={inputValues.priceIncrease}
             onInputChange={handleInputChange}
             maxValue={1000000}
-            allowDecimal={false}
           />
         </React.Fragment>
       )}
       <InputError
-        visible={!inputsValid && inputType === "interval"}
-        text="Invalid Input"
+        visible={errorMessage !== "" && inputType === "interval"}
+        text={errorMessage}
       />
+      <tbody style={{ height: "17px" }} />
     </table>
   );
 };
@@ -112,6 +128,8 @@ AdditionCarLoans.propTypes = {
   setCarLoanType: PropTypes.func.isRequired,
   setCarLoanCount: PropTypes.func.isRequired,
   setCDInterval: PropTypes.func.isRequired,
+  currentAge: PropTypes.number.isRequired,
+  lifeExpetency: PropTypes.number.isRequired,
 };
 
 export default AdditionCarLoans;

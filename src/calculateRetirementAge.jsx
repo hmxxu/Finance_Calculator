@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 // Formats balance into a money string with $ and commas
 function formatToMoney(bal) {
   bal = parseFloat(bal);
@@ -27,47 +25,20 @@ function calculateResults(
   retirementAge,
   lifeExpectancy,
   income,
+
   incomeIncrease,
-  retirementIncomeNeeded,
   investReturnRate,
+
   savings,
-  yearlyContribution,
+  savingsContribution,
+
+  retirementIncomeNeeded,
   retirementIncome
 ) {
-  const propTypes = {
-    currentAge: PropTypes.number.isRequired,
-    retirementAge: PropTypes.number.isRequired,
-    lifeExpectancy: PropTypes.number.isRequired,
-    income: PropTypes.number.isRequired,
-    incomeIncrease: PropTypes.number.isRequired,
-    retirementIncomeNeeded: PropTypes.number.isRequired,
-    investReturnRate: PropTypes.number.isRequired,
-    savings: PropTypes.number.isRequired,
-    yearlyContribution: PropTypes.number.isRequired,
-    retirementIncome: PropTypes.number.isRequired,
-  };
-
-  PropTypes.checkPropTypes(
-    propTypes,
-    {
-      currentAge,
-      retirementAge,
-      lifeExpectancy,
-      income,
-      incomeIncrease,
-      retirementIncomeNeeded,
-      investReturnRate,
-      savings,
-      yearlyContribution,
-      retirementIncome,
-    },
-    "argument",
-    "calculateResults"
-  );
   income = taxIncome(income);
   incomeIncrease /= 100;
   investReturnRate /= 100;
-  yearlyContribution /= 100;
+  savingsContribution /= 100;
 
   const startBal = savings;
   const table = [
@@ -84,11 +55,11 @@ function calculateResults(
   // Simulate working/investing years
   for (let age = currentAge; age < retirementAge; age++) {
     savings += savings * investReturnRate;
-    savings += income * yearlyContribution;
+    savings += income * savingsContribution;
     const preInvested =
       table.length === 1 ? startBal : parseInt(table[table.length - 1][3]);
 
-    const contribution = income * yearlyContribution;
+    const contribution = income * savingsContribution;
 
     savings = Math.round(savings * 100) / 100;
 
