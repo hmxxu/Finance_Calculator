@@ -278,14 +278,15 @@ const Home = () => {
                 flexDirection: isAboveMediumScreens ? "row" : "column",
               }}
             >
-              <div style={{ marginTop: "auto", marginBottom: "auto" }}>
-                <ResultsTable
-                  header="Results"
-                  results={results[1]}
-                  resetOnClick={() => window.location.reload()}
-                />
-              </div>
+              <InvestmentGraph data={results[0]} dataType={4} />
               <InvestmentGraph data={results[0]} dataType={5} />
+            </div>
+            <div style={{ marginLeft: "auto", marginRight: "auto" }}>
+              <ResultsTable
+                header="Results"
+                results={results[1]}
+                resetOnClick={() => window.location.reload()}
+              />
             </div>
             {/* Result Table */}
             <InvestmentTable data={results[0]} />

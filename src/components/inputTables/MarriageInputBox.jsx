@@ -10,7 +10,8 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
   const [inputValues, setInputValues] = useState({
     marriageAge: 30,
     savings: 100000,
-    yearlyContribution: 12000,
+    checking: 10000,
+    income: 60000,
     included: true,
   });
 
@@ -70,10 +71,19 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
           maxValue={1000000}
         />
         <Input
-          name="yearlyContribution"
-          leftText="Yearly Contribution"
-          defaultInput={inputValues.yearlyContribution}
+          name="checking"
+          leftText="Checking Contribution"
+          infoText="The checking contribution at marriage"
+          defaultInput={inputValues.checking}
           leftlabelText="$"
+          onInputChange={handleInputChange}
+          maxValue={1000000}
+        />
+        <Input
+          name="income"
+          leftText="Current Income"
+          leftlabelText="$"
+          defaultInput={inputValues.income}
           rightText="/year"
           onInputChange={handleInputChange}
           maxValue={1000000}

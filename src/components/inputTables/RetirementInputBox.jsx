@@ -12,19 +12,29 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
     retirementAge: 67,
     lifeExpectancy: 80,
     income: 60000,
+
     incomeIncrease: 3.58,
-    retirementIncomeNeeded: 80000,
     investReturnRate: 10.16,
+
     savings: 5000,
+    savingsContribution: 20,
     checking: 5000,
-    yearlyContribution: 20,
+    checkingContribution: 50,
+
+    retirementIncomeNeeded: 80000,
     retirementIncome: 25000,
   });
 
   const [errorMessage, setErrorMessage] = useState("Invalid Input");
 
   useEffect(() => {
-    const { currentAge, retirementAge, lifeExpectancy } = inputValues;
+    const {
+      currentAge,
+      retirementAge,
+      lifeExpectancy,
+      savingsContribution,
+      checkingContribution,
+    } = inputValues;
     const inputs = Object.values(inputValues);
 
     if (inputs.some((input) => isNaN(input) || input === null)) {
@@ -36,6 +46,10 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
     } else if (currentAge >= retirementAge) {
       setErrorMessage(
         "Current age can't be greater or equal to retirement age"
+      );
+    } else if (savingsContribution + checkingContribution > 100) {
+      setErrorMessage(
+        "Savings and checking contribution must be less than 100%"
       );
     } else {
       if (homePage) {
@@ -87,7 +101,6 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
         defaultInput={inputValues.currentAge}
         onInputChange={handleInputChange}
         maxValue={120}
-        allowDecimal={false}
       />
       <Input
         name="retirementAge"
@@ -95,7 +108,6 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
         defaultInput={inputValues.retirementAge}
         onInputChange={handleInputChange}
         maxValue={120}
-        allowDecimal={false}
       />
       <Input
         name="lifeExpectancy"
@@ -103,7 +115,6 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
         defaultInput={inputValues.lifeExpectancy}
         onInputChange={handleInputChange}
         maxValue={150}
-        allowDecimal={false}
       />
       <Input
         name="income"
@@ -113,7 +124,6 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
         rightText="/year"
         onInputChange={handleInputChange}
         maxValue={1000000}
-        allowDecimal={false}
       />
       <FilledInput
         leftText="Taxed Income"
@@ -122,11 +132,7 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
         inputValue={taxIncome(inputValues.income)}
         rightText="/year"
       />
-      <tbody>
-        <tr>
-          <td style={{ paddingTop: "10px" }}></td>
-        </tr>
-      </tbody>
+      <tbody style={{ height: "5px" }} />
       <InputHeader header="Assumptions" />
       <Input
         name="incomeIncrease"
@@ -140,17 +146,6 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
         allowDecimal={true}
       />
       <Input
-        name="retirementIncomeNeeded"
-        leftText="Income Needed After Retirement"
-        leftlabelText="$"
-        defaultInput={inputValues.retirementIncomeNeeded}
-        infoText="In order to maintain the same lifestyle you will need 80% of your preretirement income"
-        rightText="/year"
-        onInputChange={handleInputChange}
-        maxValue={10000000}
-        allowDecimal={false}
-      />
-      <Input
         name="investReturnRate"
         leftText="Average Investment Return"
         defaultInput={inputValues.investReturnRate}
@@ -160,39 +155,57 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
         maxValue={100}
         allowDecimal={true}
       />
-      <tbody>
-        <tr>
-          <td style={{ paddingTop: "10px" }}></td>
-        </tr>
-      </tbody>
-      <InputHeader header="Payments" />
+      <tbody style={{ height: "5px" }} />
+      <InputHeader header="Budgeting" />
       <Input
         name="savings"
-        leftText="Current Retirement Savings"
+        leftText="Current Savings Balance"
+        infoText="This account will be drawn from for down payments and during retirement"
         leftlabelText="$"
         defaultInput={inputValues.savings}
         onInputChange={handleInputChange}
         maxValue={1000000}
-        allowDecimal={false}
       />
       <Input
-        name="checking"
-        leftText="Current Checking Balance"
-        leftlabelText="$"
-        defaultInput={inputValues.checking}
-        onInputChange={handleInputChange}
-        maxValue={1000000}
-        allowDecimal={false}
-      />
-      <Input
-        name="yearlyContribution"
-        leftText="Yearly Retirement Contribution"
-        defaultInput={inputValues.yearlyContribution}
+        name="savingsContribution"
+        leftText="Yearly Savings Contribution"
+        defaultInput={inputValues.savingsContribution}
         rightlabelText="%"
         rightText="/year"
         onInputChange={handleInputChange}
         maxValue={100}
         allowDecimal={true}
+      />
+      <Input
+        name="checking"
+        leftText="Current Checking Balance"
+        infoText="This account will be drawn from for monthly expenses and monthly car and mortgage payments"
+        leftlabelText="$"
+        defaultInput={inputValues.checking}
+        onInputChange={handleInputChange}
+        maxValue={1000000}
+      />
+      <Input
+        name="checkingContribution"
+        leftText="Yearly Checking Contribution"
+        defaultInput={inputValues.checkingContribution}
+        rightlabelText="%"
+        rightText="/year"
+        onInputChange={handleInputChange}
+        maxValue={100}
+        allowDecimal={true}
+      />
+      <tbody style={{ height: "5px" }} />
+      <InputHeader header="Retirement Assumptions" />
+      <Input
+        name="retirementIncomeNeeded"
+        leftText="Income Needed in Retirement"
+        leftlabelText="$"
+        defaultInput={inputValues.retirementIncomeNeeded}
+        infoText="In order to maintain the same lifestyle you will need 80% of your preretirement income"
+        rightText="/year"
+        onInputChange={handleInputChange}
+        maxValue={10000000}
       />
       <Input
         name="retirementIncome"
@@ -203,8 +216,8 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
         onInputChange={handleInputChange}
         infoText="This is any other income durning retire (social security, pension, etc)"
         maxValue={1000000}
-        allowDecimal={false}
       />
+
       <tbody>
         <tr>
           <td

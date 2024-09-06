@@ -19,7 +19,7 @@ const MortgageInputBox = ({
     price: 250000,
     downPayment: 20,
     term: 30,
-    interest: 6.25,
+    interest: 6.44,
     startAge: 35,
     priceType: "normal",
     inflation: 3.67,

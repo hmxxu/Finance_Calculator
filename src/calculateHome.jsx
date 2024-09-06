@@ -2,7 +2,7 @@ function calcMonthly(P, R, N) {
   return (P * (R * Math.pow(1 + R, N))) / (Math.pow(1 + R, N) - 1);
 }
 
-function taxIncome(income) {
+function taxedIncome(income) {
   const brackets = [
     { limit: 11000, rate: 0.9 },
     { limit: 44725, rate: 0.88 },
@@ -17,9 +17,14 @@ function taxIncome(income) {
   return income * bracket.rate;
 }
 
+function calcInflatedPrice(value, inflationRate, years) {
+  return value * (1 + inflationRate) ** years;
+}
+
 function calculateResults(rd, md, cds, mad, med) {
-  // How much $ you have to pay at every year
+  // How much $ in mortgage and car payments at each year
   const agePayment = new Map();
+  // How much $ in mortgage and car down payments at each year
   const ageDownPayment = new Map();
   for (let age = 0; age < 150; age++) {
     agePayment.set(age, 0);
@@ -49,7 +54,7 @@ function calculateResults(rd, md, cds, mad, med) {
 
         const res = calculateResults(rd, md2, cds, mad, med)[0];
 
-        if (res[res.length - 1][5] < 0) {
+        if (res && (res[res.length - 1][4] < 0 || res[res.length - 1][5] < 0)) {
           high = mid - 1;
         } else {
           housePrice = mid;
@@ -58,8 +63,11 @@ function calculateResults(rd, md, cds, mad, med) {
       }
     }
 
-    const inflatedPrice =
-      housePrice * (1 + md.inflation / 100) ** (md.startAge - rd.currentAge);
+    const inflatedPrice = calcInflatedPrice(
+      housePrice,
+      md.inflation / 100,
+      md.startAge - rd.currentAge
+    );
     const downPaymentValue = (md.downPayment / 100) * inflatedPrice;
     addPayment(ageDownPayment, md.startAge, downPaymentValue);
 
@@ -80,8 +88,11 @@ function calculateResults(rd, md, cds, mad, med) {
   let totalCarPayments = 0;
   // For each car loan add car payments to each year
   cds.forEach((cd) => {
-    const inflatedPrice =
-      cd.price * (1 + cd.inflation / 100) ** (cd.startAge - rd.currentAge);
+    const inflatedPrice = calcInflatedPrice(
+      cd.price,
+      cd.inflation / 100,
+      cd.startAge - rd.currentAge
+    );
     const downPaymentValue = (cd.downPayment / 100) * inflatedPrice;
     const upFrontCost =
       downPaymentValue + cd.fees + (cd.salesTax / 100) * inflatedPrice;
@@ -111,7 +122,9 @@ function calculateResults(rd, md, cds, mad, med) {
       addPayment(agePayment, age, payment);
     }
   });
-  let income = taxIncome(rd.income); // Change to taxed income
+
+  let income = taxedIncome(rd.income);
+  let partnerIncome = taxedIncome(mad.income);
   const table = [
     [
       "Age",
@@ -125,50 +138,88 @@ function calculateResults(rd, md, cds, mad, med) {
 
   const incomeIncrease = rd.incomeIncrease / 100;
   const investReturnRate = rd.investReturnRate / 100;
-  const yearlyContribution = rd.yearlyContribution / 100;
+  const savingContribution = rd.savingsContribution / 100;
+  const checkingContribution = rd.checkingContribution / 100;
 
   let savings = rd.savings;
   let checking = rd.checking;
   let totalInvested = savings;
-  console.log(ageDownPayment);
+  let canAfford = true;
+  const averageInflationRate = 0.03;
 
   for (let age = rd.currentAge; age <= rd.lifeExpectancy; age++) {
     // Simulate working/investing years
     if (age < rd.retirementAge) {
-      savings += savings * investReturnRate; // Yearly invesetment return
-      if (mad.included && age >= mad.startAge) {
-        if (mad.marriageAge === age) savings += mad.savings;
-        savings += mad.yearlyContribution;
-      }
-      checking = income * (1 - yearlyContribution);
-      savings += income * yearlyContribution; // Yearly contribution
+      // If married
+      if (mad.included && age >= mad.marriageAge) {
+        // combine checking and savings account with partner
+        if (mad.marriageAge === age) {
+          checking += mad.checking;
+          savings += mad.savings;
+        }
 
-      totalInvested += income * yearlyContribution;
+        checking += partnerIncome * checkingContribution;
+        checking -=
+          calcInflatedPrice(med, averageInflationRate, age - rd.currentAge) *
+          12;
+        savings += partnerIncome * savingContribution;
+      }
+
+      checking += income * checkingContribution;
+      checking -=
+        calcInflatedPrice(med, averageInflationRate, age - rd.currentAge) * 12;
+      savings += income * savingContribution;
+
+      checking -= agePayment.get(age);
+      savings += savings * investReturnRate;
     } else {
-      savings -= rd.retirementIncomeNeeded + rd.retirementIncome;
+      // Move all balance from checking to savings when retired
+      if (age === rd.retirementAge) {
+        savings += checking;
+        checking = 0;
+        income = 0;
+      }
+      savings -=
+        calcInflatedPrice(
+          rd.retirementIncomeNeeded,
+          averageInflationRate,
+          age - rd.currentAge
+        ) + rd.retirementIncome;
+      // Assuming that partner needs the same retirement income and retirement income needed
+      if (mad.included && age >= mad.marriageAge) {
+        savings -=
+          calcInflatedPrice(
+            rd.retirementIncomeNeeded,
+            averageInflationRate,
+            age - rd.currentAge
+          ) + rd.retirementIncome;
+      }
+      savings -= agePayment.get(age);
       savings += savings * investReturnRate; // If invested money keep compouding durning retirement
-      totalInvested += rd.retirementIncome;
     }
-    checking -= agePayment.get(age);
-    checking -= med * 12;
+
     savings -= ageDownPayment.get(age);
 
     table.push([
       age,
       income,
-      agePayment.get(age),
+      agePayment.get(age) + ageDownPayment.get(age),
       totalInvested,
       checking,
       savings,
     ]);
 
     income += income * incomeIncrease; // Year income increase
-    if (savings < 0) break;
+    if (savings < 0 || checking < 0) {
+      canAfford = false;
+      break;
+    }
   }
+  console.log(ageDownPayment);
 
-  var results = [];
+  let results = [];
 
-  if (table[table.length - 1][table[table.length - 1].length - 1] < 0) {
+  if (!canAfford) {
     results.push([
       "Cannot Afford Payments at age " + table[table.length - 1][0],
     ]);
