@@ -21,7 +21,8 @@
   background-color: #336699;
   color: white;
   border-bottom: solid 1px #bbbbbb;
-  margin: auto;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .investment-table tbody tr:nth-child(even) {

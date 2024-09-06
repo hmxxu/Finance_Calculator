@@ -253,9 +253,9 @@ const Home = () => {
               visible={
                 results !== null && results[0][results[0].length - 1][5] < 0
               }
-              text="Cannot afford payments, consider increasing income or decreases expenses or assets"
+              text="Cannot afford payments, consider increasing income or decreasing expenses and/or assets"
             />
-            <tbody style={{ height: "10px" }} />
+            <tbody style={{ height: isAboveMediumScreens ? "5px" : "20px" }} />
             <InputButton
               calcOnClick={calculateButton}
               resetOnClick={() => window.location.reload()}

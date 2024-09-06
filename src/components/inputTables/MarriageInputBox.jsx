@@ -81,7 +81,8 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
         />
         <Input
           name="income"
-          leftText="Current Income"
+          leftText="Income at Marriage Age"
+          infoText="We assume the partner has the same: checking and savings contribution %, monthly expenses, income increase, retirement income, retirement income needed"
           leftlabelText="$"
           defaultInput={inputValues.income}
           rightText="/year"

@@ -113,13 +113,14 @@ const AdditionCarLoans = ({
             onInputChange={handleInputChange}
             maxValue={1000000}
           />
+          <InputError
+            visible={errorMessage !== "" && inputType === "interval"}
+            text={errorMessage}
+          />
         </React.Fragment>
       )}
-      <InputError
-        visible={errorMessage !== "" && inputType === "interval"}
-        text={errorMessage}
-      />
-      <tbody style={{ height: "17px" }} />
+
+      {inputType === "interval" && <tbody style={{ height: "17px" }} />}
     </table>
   );
 };

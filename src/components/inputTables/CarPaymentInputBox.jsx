@@ -6,6 +6,7 @@ import Input from "./inputTableComponenets/Input";
 import InputError from "./inputTableComponenets/InputError";
 import InputButton from "./inputTableComponenets/InputButton";
 import FilledInput from "./inputTableComponenets/FilledInput";
+import useMediaQuery from "../../hooks/useMediaQuery";
 
 const CarPaymentInputBox = ({
   setCarPaymentInputs,
@@ -24,6 +25,7 @@ const CarPaymentInputBox = ({
     inflation: 3.7,
   });
 
+  const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
@@ -170,9 +172,9 @@ const CarPaymentInputBox = ({
           calcOnClick={calculateButton}
           resetOnClick={() => window.location.reload()}
         />
-      ) : (
-        <tbody style={{ height: "15px" }} />
-      )}
+      ) : isAboveMediumScreens ? (
+        <tbody style={{ height: "17px" }} />
+      ) : null}
     </table>
   );
 };

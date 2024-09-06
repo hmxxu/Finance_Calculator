@@ -16,9 +16,17 @@ const InvestmentTable = ({ data }) => {
     >
       <table className="investment-table">
         <thead>
+          {/* Break each word into its own line */}
           <tr className="investment-table-col-header">
             {data[0].map((header, index) => (
-              <td key={index}>{header}</td>
+              <td key={index}>
+                {header.split(" ").map((word, i) => (
+                  <span key={i}>
+                    {word}
+                    <br />
+                  </span>
+                ))}
+              </td>
             ))}
           </tr>
         </thead>
