@@ -157,12 +157,16 @@ function calculateResults(rd, md, cds, mad, med) {
           checking += mad.checking;
           savings += mad.savings;
         }
-
-        checking += partnerIncome * checkingContribution;
+        const adjustedPartnerIncome = calcInflatedPrice(
+          partnerIncome,
+          incomeIncrease,
+          age - rd.currentAge
+        );
+        checking += adjustedPartnerIncome * checkingContribution;
         checking -=
           calcInflatedPrice(med, averageInflationRate, age - rd.currentAge) *
           12;
-        savings += partnerIncome * savingContribution;
+        savings += adjustedPartnerIncome * savingContribution;
       }
 
       checking += income * checkingContribution;
@@ -215,7 +219,6 @@ function calculateResults(rd, md, cds, mad, med) {
       break;
     }
   }
-  console.log(ageDownPayment);
 
   let results = [];
 
