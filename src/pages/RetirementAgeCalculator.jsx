@@ -23,8 +23,10 @@ const RetirementAgeCalculator = () => {
       <Navbar />
       <div
         style={{
+          display: "flex",
+          gap: "1rem",
           paddingTop: "7rem",
-          flexDirection: isAboveMediumScreens ? "row" : "column",
+          flexDirection: "column",
         }}
       >
         {!results && (
@@ -34,7 +36,9 @@ const RetirementAgeCalculator = () => {
               justifyContent: "center",
             }}
           >
-            <RetirementInputBox setRetirementData={calculate} />
+            <div>
+              <RetirementInputBox setRetirementData={calculate} />
+            </div>
           </div>
         )}
         {results && (
@@ -48,11 +52,13 @@ const RetirementAgeCalculator = () => {
               flexDirection: isAboveMediumScreens ? "row" : "column",
             }}
           >
-            <ResultsTable
-              header="Results"
-              results={results[1]}
-              resetOnClick={() => window.location.reload()}
-            />
+            <div>
+              <ResultsTable
+                header="Results"
+                results={results[1]}
+                resetOnClick={() => window.location.reload()}
+              />
+            </div>
             <InvestmentGraph data={results[0]} dataType={5} />
           </div>
         )}

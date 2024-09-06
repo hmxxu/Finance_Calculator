@@ -28,13 +28,18 @@ const CarPaymentCalculator = () => {
           gap: "2rem",
         }}
       >
-        <CarPaymentInputBox setCarPaymentInputs={calculate} />
+        <div>
+          <CarPaymentInputBox setCarPaymentInputs={calculate} />
+        </div>
+
         {results && (
-          <ResultsTable
-            header="Results"
-            results={results}
-            resetOnClick={() => window.location.reload()}
-          />
+          <div>
+            <ResultsTable
+              header="Results"
+              results={results}
+              resetOnClick={() => window.location.reload()}
+            />
+          </div>
         )}
       </div>
     </div>

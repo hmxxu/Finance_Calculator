@@ -93,6 +93,9 @@ const Input = ({
               onChange={handleChange}
             />
             <span className="right-label-text">{rightlabelText}</span>
+            {isAboveMediumScreens && (
+              <span style={{ paddingLeft: "5px" }}>{rightText}</span>
+            )}
           </div>
           {selectValues && !isAboveMediumScreens && (
             <div style={{ display: "flex" }}>
@@ -110,9 +113,11 @@ const Input = ({
           )}
         </td>
 
-        {isAboveMediumScreens && (
-          <td style={{ paddingRight: "5px" }}>{rightText}</td>
-        )}
+        {/* {isAboveMediumScreens && (
+          <td style={{ paddingRight: "5px", textAlign: "left" }}>
+            {rightText}
+          </td>
+        )} */}
         {selectValues && isAboveMediumScreens && (
           <td>
             <select

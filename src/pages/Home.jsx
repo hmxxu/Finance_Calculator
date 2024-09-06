@@ -13,7 +13,7 @@ import InputButton from "../components/inputTables/inputTableComponenets/InputBu
 import AdditionCarLoans from "../components/inputTables/AdditionCarLoans";
 import FilledCarPaymentInputBox from "../components/inputTables/FilledCarPaymentInputBox";
 import MarriageInputBox from "../components/inputTables/MarriageInputBox";
-import MontlyExpensesInputBox from "../components/inputTables/MontlyExpensesInputBox";
+import MontlhyExpensesInputBox from "../components/inputTables/MonthlyExpensesInputBox";
 import InputError from "../components/inputTables/inputTableComponenets/InputError";
 
 const Home = () => {
@@ -143,15 +143,14 @@ const Home = () => {
                   homePage={true}
                 />
               </div>
-              <div style={{ display: isAboveMediumScreens ? "flex" : "" }}>
-                <MarriageInputBox
-                  setMarriageData={setMarriageData}
-                  currentAge={retirementData ? retirementData.currentAge : 0}
-                  lifeExpetency={
-                    retirementData ? retirementData.lifeExpectancy : 0
-                  }
-                />
-              </div>
+
+              <MarriageInputBox
+                setMarriageData={setMarriageData}
+                currentAge={retirementData ? retirementData.currentAge : 0}
+                lifeExpetency={
+                  retirementData ? retirementData.lifeExpectancy : 0
+                }
+              />
             </div>
 
             {/* Right Side (Mortgage and Monthly Expenses*/}
@@ -163,21 +162,17 @@ const Home = () => {
                 width: isAboveMediumScreens ? "" : "100%",
               }}
             >
-              <div style={{ display: isAboveMediumScreens ? "flex" : "" }}>
-                <MortgageInputBox
-                  setMortgageData={setMortgageData}
-                  homePage={true}
-                  currentAge={retirementData ? retirementData.currentAge : 0}
-                  lifeExpetency={
-                    retirementData ? retirementData.lifeExpectancy : 0
-                  }
-                />
-              </div>
-              <div style={{ width: "100%" }}>
-                <MontlyExpensesInputBox
-                  setMonthlyExpensesData={setMonthlyExpensesData}
-                />
-              </div>
+              <MortgageInputBox
+                setMortgageData={setMortgageData}
+                homePage={true}
+                currentAge={retirementData ? retirementData.currentAge : 0}
+                lifeExpetency={
+                  retirementData ? retirementData.lifeExpectancy : 0
+                }
+              />
+              <MontlhyExpensesInputBox
+                setMonthlyExpensesData={setMonthlyExpensesData}
+              />
             </div>
           </div>
           {/* Addition Assets */}
@@ -188,13 +183,17 @@ const Home = () => {
               flexDirection: isAboveMediumScreens ? "row" : "column",
             }}
           >
-            <AdditionCarLoans
-              setCarLoanType={setCarLoanType}
-              setCarLoanCount={setCarLoanCount}
-              setCDInterval={createCDInterval}
-              currentAge={retirementData ? retirementData.currentAge : 0}
-              lifeExpetency={retirementData ? retirementData.lifeExpectancy : 0}
-            />
+            <div>
+              <AdditionCarLoans
+                setCarLoanType={setCarLoanType}
+                setCarLoanCount={setCarLoanCount}
+                setCDInterval={createCDInterval}
+                currentAge={retirementData ? retirementData.currentAge : 0}
+                lifeExpetency={
+                  retirementData ? retirementData.lifeExpectancy : 0
+                }
+              />
+            </div>
           </div>
           {/* Car Input boxes */}
           {((carLoanType === "normal" && carLoanCount > 0) ||
@@ -213,28 +212,32 @@ const Home = () => {
             >
               {carLoanType === "normal"
                 ? Array.from({ length: carLoanCount }).map((_, index) => (
-                    <CarPaymentInputBox
-                      key={index}
-                      setCarPaymentInputs={(newData) =>
-                        updateCarPaymentData(index, newData)
-                      }
-                      homePage={true}
-                      currentAge={
-                        retirementData ? retirementData.currentAge : 0
-                      }
-                      lifeExpetency={
-                        retirementData ? retirementData.lifeExpectancy : 0
-                      }
-                    />
+                    <div style={{ display: "flex" }}>
+                      <CarPaymentInputBox
+                        key={index}
+                        setCarPaymentInputs={(newData) =>
+                          updateCarPaymentData(index, newData)
+                        }
+                        homePage={true}
+                        currentAge={
+                          retirementData ? retirementData.currentAge : 0
+                        }
+                        lifeExpetency={
+                          retirementData ? retirementData.lifeExpectancy : 0
+                        }
+                      />
+                    </div>
                   ))
                 : carIntervalData.map((cd, index) => (
-                    <FilledCarPaymentInputBox
-                      key={index}
-                      header={"Car At Age " + cd.startAge}
-                      price={cd.price}
-                      startAge={cd.startAge}
-                      currentAge={retirementData.currentAge}
-                    />
+                    <div style={{ display: "flex" }}>
+                      <FilledCarPaymentInputBox
+                        key={index}
+                        header={"Car At Age " + cd.startAge}
+                        price={cd.price}
+                        startAge={cd.startAge}
+                        currentAge={retirementData.currentAge}
+                      />
+                    </div>
                   ))}
             </div>
           )}
@@ -270,6 +273,7 @@ const Home = () => {
             style={{
               display: "flex",
               flexDirection: "column",
+              gap: "1rem",
             }}
           >
             {/* Result Table and Graph */}

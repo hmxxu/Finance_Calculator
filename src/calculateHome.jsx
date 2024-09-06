@@ -143,7 +143,6 @@ function calculateResults(rd, md, cds, mad, med) {
   ];
 
   const incomeIncrease = rd.incomeIncrease / 100;
-  const investReturnRate = rd.investReturnRate / 100;
   const savingContribution = rd.savingsContribution / 100;
   const checkingContribution = rd.checkingContribution / 100;
 
@@ -155,6 +154,7 @@ function calculateResults(rd, md, cds, mad, med) {
   for (let age = rd.currentAge; age <= rd.lifeExpectancy; age++) {
     let totalCheckingContribution = 0;
     let totalSavingsContribution = 0;
+    const numPeople = mad.included && age >= mad.marriageAge ? 2 : 1;
     // Simulate working/investing years
     if (age < rd.retirementAge) {
       // If married
@@ -171,15 +171,14 @@ function calculateResults(rd, md, cds, mad, med) {
         );
         totalCheckingContribution +=
           adjustedPartnerIncome * checkingContribution;
-        checking -=
-          calcInflatedPrice(med, averageInflationRate, age - rd.currentAge) *
-          12;
         totalSavingsContribution += adjustedPartnerIncome * savingContribution;
       }
 
       totalCheckingContribution += income * checkingContribution;
       checking -=
-        calcInflatedPrice(med, averageInflationRate, age - rd.currentAge) * 12;
+        calcInflatedPrice(med, averageInflationRate, age - rd.currentAge) *
+        12 *
+        numPeople;
       checking -= paymentAtAge.get(age);
 
       totalSavingsContribution += income * savingContribution;
@@ -191,7 +190,6 @@ function calculateResults(rd, md, cds, mad, med) {
         income = 0;
       }
       // Assuming that partner has the same retirement income and retirement income needed
-      const numPeople = mad.included && age >= mad.marriageAge ? 2 : 1;
       savings -=
         calcInflatedPrice(
           rd.retirementIncomeNeeded,
@@ -208,7 +206,7 @@ function calculateResults(rd, md, cds, mad, med) {
     savings += totalSavingsContribution;
     checking += totalCheckingContribution;
 
-    savings += savings * investReturnRate;
+    savings += (savings * rd.investReturnRate) / 100;
 
     table.push([
       age,
@@ -238,13 +236,13 @@ function calculateResults(rd, md, cds, mad, med) {
 
   results.push(
     [
-      "Saving At Retirement Age (" + rd.retirementAge + ")",
+      "Savings At Retirement Age (" + rd.retirementAge + ")",
       table[rd.retirementAge - rd.currentAge + 1][
         table[rd.retirementAge - rd.currentAge + 1].length - 1
       ],
     ],
     [
-      "Saving At Life Expectancy (" + rd.lifeExpectancy + ")",
+      "Savings At Life Expectancy (" + rd.lifeExpectancy + ")",
       table[rd.lifeExpectancy - rd.currentAge + 1][
         table[rd.lifeExpectancy - rd.currentAge + 1].length - 1
       ],

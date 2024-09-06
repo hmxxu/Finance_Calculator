@@ -6,7 +6,7 @@ import Input from "./inputTableComponenets/Input";
 import InputError from "./inputTableComponenets/InputError";
 import FilledInput from "./inputTableComponenets/FilledInput";
 
-const MontlyExpensesInputBox = ({ setMonthlyExpensesData }) => {
+const MontlhyExpensesInputBox = ({ setMonthlyExpensesData }) => {
   const [inputValues, setInputValues] = useState({
     groceryFood: 200,
     healthInsurance: 500,
@@ -131,8 +131,8 @@ const MontlyExpensesInputBox = ({ setMonthlyExpensesData }) => {
   );
 };
 
-MontlyExpensesInputBox.propTypes = {
+MontlhyExpensesInputBox.propTypes = {
   setMonthlyExpensesData: PropTypes.func.isRequired,
 };
 
-export default MontlyExpensesInputBox;
+export default MontlhyExpensesInputBox;

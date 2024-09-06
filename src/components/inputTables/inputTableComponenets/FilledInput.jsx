@@ -55,10 +55,13 @@ const FilledInput = ({
             readOnly
           />
           <span className="right-label-text">{rightlabelText}</span>
+          {isAboveMediumScreens && (
+            <span style={{ paddingLeft: "5px" }}>{rightText}</span>
+          )}
         </td>
-        {isAboveMediumScreens && (
+        {/* {isAboveMediumScreens && (
           <td style={{ paddingRight: "5px" }}>{rightText}</td>
-        )}
+        )} */}
       </tr>
       <tr>
         <td className="input-error-message" style={{ visibility: "hidden" }} />

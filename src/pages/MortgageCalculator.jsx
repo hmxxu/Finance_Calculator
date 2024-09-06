@@ -22,8 +22,10 @@ const MortgageCalculator = () => {
       <Navbar />
       <div
         style={{
+          display: "flex",
           paddingTop: "7rem",
-          flexDirection: isAboveMediumScreens ? "row" : "column",
+          gap: "1rem",
+          flexDirection: "column",
         }}
       >
         <div
@@ -34,13 +36,17 @@ const MortgageCalculator = () => {
             flexDirection: isAboveMediumScreens ? "row" : "column",
           }}
         >
-          <MortgageInputBox setMortgageData={calculate} />
+          <div>
+            <MortgageInputBox setMortgageData={calculate} />
+          </div>
           {results && (
-            <ResultsTable
-              header="Results"
-              results={results[1]}
-              resetOnClick={() => window.location.reload()}
-            />
+            <div>
+              <ResultsTable
+                header="Results"
+                results={results[1]}
+                resetOnClick={() => window.location.reload()}
+              />
+            </div>
           )}
         </div>
         {results && <InvestmentTable data={results[0]} />}

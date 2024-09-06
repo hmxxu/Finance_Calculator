@@ -22,7 +22,10 @@ const InvestmentCalculator = () => {
       <Navbar />
       <div
         style={{
+          display: "flex",
           paddingTop: "7rem",
+          gap: "1rem",
+          flexDirection: "column",
         }}
       >
         <div
@@ -31,7 +34,9 @@ const InvestmentCalculator = () => {
             justifyContent: "center",
           }}
         >
-          <InvestmentInputBox setInvestmentData={calculate} />
+          <div>
+            <InvestmentInputBox setInvestmentData={calculate} />
+          </div>
         </div>
         <div
           style={{
