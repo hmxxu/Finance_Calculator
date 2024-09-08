@@ -1,7 +1,12 @@
+// Calculates monthly payment for a loan given:
+// - P: Principal loan amount
+// - R: Monthly interest rate
+// - N: Total number of payments
 function calcMonthly(P, R, N) {
   return (P * (R * Math.pow(1 + R, N))) / (Math.pow(1 + R, N) - 1);
 }
 
+// Calculates income after tax given a income
 function taxedIncome(income) {
   const brackets = [
     { limit: 11000, rate: 0.9 },
@@ -17,14 +22,25 @@ function taxedIncome(income) {
   return income * bracket.rate;
 }
 
+// Calculates inflated price in 'years' years given:
+// - value: Initial price
+// - inflationRate: Inflation rate per year
+// - years: number of years
 function calcInflatedPrice(value, inflationRate, years) {
   return value * (1 + inflationRate) ** years;
 }
 
+// Adds payment to a map given a map, age, and value to add
 function addPayment(map, age, value) {
   map.set(age, map.get(age) + value);
 }
 
+// Calculates and returns the financial data based on the input parameters
+// - rd: Retirement data
+// - md: Mortgage data
+// - cds: Car data (could be an array of car-related financial information)
+// - mad: Marriage data
+// - med: Monthly expense data
 function calculateResults(rd, md, cds, mad, med) {
   // How much $ in mortgage and car payments at each year
   const paymentAtAge = new Map(
@@ -34,6 +50,14 @@ function calculateResults(rd, md, cds, mad, med) {
   const downPaymentAtAge = new Map(
     Array.from({ length: 150 }, (_, age) => [age, 0])
   );
+  // How much $ in child payments at each year
+  const childPaymentAtAge = new Map(
+    Array.from({ length: 150 }, (_, age) => [age, 0])
+  );
+
+  mad.childAges.forEach((childAge) => {
+    console.log(childAge);
+  });
 
   let housePrice = md.price;
   let mortgageMonthlyPayment;
