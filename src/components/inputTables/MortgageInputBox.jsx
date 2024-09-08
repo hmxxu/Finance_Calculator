@@ -83,13 +83,6 @@ const MortgageInputBox = ({
     }));
   };
 
-  const setIncluded = (boo) => {
-    setInputValues((prevValues) => ({
-      ...prevValues,
-      included: boo,
-    }));
-  };
-
   function getInflatedPrice() {
     if (
       isNaN(inputValues.price) ||
@@ -224,7 +217,14 @@ const MortgageInputBox = ({
         {homePage ? (
           <React.Fragment>
             <tbody style={{ height: "15px" }} />
-            <IncludeExcludeButtons setIncluded={setIncluded} />
+            <IncludeExcludeButtons
+              setIncluded={(boo) => {
+                setInputValues((prevValues) => ({
+                  ...prevValues,
+                  included: boo,
+                }));
+              }}
+            />
           </React.Fragment>
         ) : (
           <InputButton

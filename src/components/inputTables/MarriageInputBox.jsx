@@ -5,6 +5,7 @@ import InputHeader from "./inputTableComponenets/InputHeader";
 import Input from "./inputTableComponenets/Input";
 import InputError from "./inputTableComponenets/InputError";
 import IncludeExcludeButtons from "./inputTableComponenets/IncludeExcludeButtons";
+import InputCounter from "./inputTableComponenets/InputCounter";
 
 const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
   const [inputValues, setInputValues] = useState({
@@ -12,16 +13,37 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
     savings: 120000,
     checking: 35000,
     income: 60000,
+    childCount: 0,
+    childCostPerYear: 25000,
+    childAges: [],
     included: true,
   });
 
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const { marriageAge } = inputValues;
+    const {
+      marriageAge,
+      savings,
+      checking,
+      income,
+      childCount,
+      childCostPerYear,
+      childAges,
+    } = inputValues;
 
-    const inputs = Object.values(inputValues);
-    if (inputs.some((input) => isNaN(input) || input === null)) {
+    const inputs = [
+      marriageAge,
+      savings,
+      checking,
+      income,
+      childCount,
+      childCostPerYear,
+    ];
+    if (
+      inputs.some((input) => isNaN(input) || input === null) ||
+      childAges.some((input) => isNaN(input) || input === null)
+    ) {
       setErrorMessage("Invalid Input");
     } else if (marriageAge > lifeExpetency) {
       setErrorMessage(
@@ -29,6 +51,10 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
       );
     } else if (marriageAge < currentAge) {
       setErrorMessage("Current age must be greater than marriage age");
+    } else if (childAges.some((input) => input < currentAge)) {
+      setErrorMessage("Current age must be greater than age you have child");
+    } else if (childAges.some((input) => input > lifeExpetency)) {
+      setErrorMessage("Age you have child must be less than life expetency");
     } else {
       setErrorMessage("");
       setMarriageData(inputValues);
@@ -40,13 +66,6 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
       ...inputValues,
       [name]: value,
     });
-  };
-
-  const setIncluded = (boo) => {
-    setInputValues((prevValues) => ({
-      ...prevValues,
-      included: boo,
-    }));
   };
 
   return (
@@ -89,9 +108,52 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
           onInputChange={handleInputChange}
           maxValue={1000000}
         />
+        <InputCounter
+          leftText="Number of children"
+          defaultValue={inputValues.childCount}
+          setCounter={(val) => {
+            handleInputChange("childCount", val);
+          }}
+          minCount={0}
+          maxCount={6}
+        />
+        {inputValues.childCount > 0 && (
+          <Input
+            name="childCostPerYear"
+            leftText="Cost of child per year"
+            defaultInput={inputValues.childCostPerYear}
+            rightText="/year"
+            onInputChange={handleInputChange}
+            maxValue={10000000}
+          />
+        )}
+        {[...Array(inputValues.childCount)].map((_, index) => (
+          <Input
+            key={index}
+            name={`child#${index + 1}`}
+            leftText={`Age you have child #${index + 1}`}
+            defaultInput={inputValues.childAges[index] || 30}
+            onInputChange={(name, val) => {
+              const newChildAges = [...inputValues.childAges];
+              newChildAges[index] = val;
+              setInputValues((prevValues) => ({
+                ...prevValues,
+                childAges: newChildAges,
+              }));
+            }}
+            maxValue={150}
+          />
+        ))}
         <InputError visible={errorMessage !== ""} text={errorMessage} />
         <tbody style={{ height: "20px" }} />
-        <IncludeExcludeButtons setIncluded={setIncluded} />
+        <IncludeExcludeButtons
+          setIncluded={(boo) => {
+            setInputValues((prevValues) => ({
+              ...prevValues,
+              included: boo,
+            }));
+          }}
+        />
       </table>
       <div
         className="overlay"

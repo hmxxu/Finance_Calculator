@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import icon from "../../../svgs/question-circle.svg";
 
 const InputCounter = ({
+  name,
   leftText,
   infoText,
   setCounter,
