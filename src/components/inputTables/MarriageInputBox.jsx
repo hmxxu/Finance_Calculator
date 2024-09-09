@@ -13,9 +13,9 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
     savings: 120000,
     checking: 35000,
     income: 60000,
-    childCount: 0,
     childCostPerYear: 25000,
     childAges: [],
+    yearsOff: 5,
     included: true,
   });
 
@@ -27,19 +27,12 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
       savings,
       checking,
       income,
-      childCount,
       childCostPerYear,
       childAges,
+      yearsOff,
     } = inputValues;
 
-    const inputs = [
-      marriageAge,
-      savings,
-      checking,
-      income,
-      childCount,
-      childCostPerYear,
-    ];
+    const inputs = [marriageAge, savings, checking, income, childCostPerYear];
     if (
       inputs.some((input) => isNaN(input) || input === null) ||
       childAges.some((input) => isNaN(input) || input === null)
@@ -65,6 +58,23 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
     setInputValues({
       ...inputValues,
       [name]: value,
+    });
+  };
+
+  const handleChildCountChange = (val) => {
+    setInputValues((prevValues) => {
+      const newChildAges = [...prevValues.childAges];
+
+      if (val > newChildAges.length) {
+        newChildAges.push(30);
+      } else {
+        newChildAges.splice(val);
+      }
+
+      return {
+        ...prevValues,
+        childAges: newChildAges,
+      };
     });
   };
 
@@ -110,32 +120,43 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
         />
         <InputCounter
           leftText="Number of children"
-          defaultValue={inputValues.childCount}
-          setCounter={(val) => {
-            handleInputChange("childCount", val);
-          }}
+          defaultValue={inputValues.childAges.length}
+          setCounter={handleChildCountChange}
           minCount={0}
           maxCount={6}
         />
-        {inputValues.childCount > 0 && (
+
+        {inputValues.childAges.length > 0 && (
           <Input
             name="childCostPerYear"
             leftText="Cost of child per year"
+            leftlabelText="$"
             defaultInput={inputValues.childCostPerYear}
             rightText="/year"
             onInputChange={handleInputChange}
             maxValue={10000000}
           />
         )}
-        {[...Array(inputValues.childCount)].map((_, index) => (
+
+        {inputValues.childAges.length > 0 && (
+          <InputCounter
+            leftText="Career Break Length"
+            defaultValue={inputValues.yearsOff}
+            setCounter={(val) => handleInputChange("yearsOff", val)}
+            minCount={0}
+            maxCount={20}
+          />
+        )}
+
+        {inputValues.childAges.map((age, index) => (
           <Input
             key={index}
             name={`child#${index + 1}`}
             leftText={`Age you have child #${index + 1}`}
-            defaultInput={inputValues.childAges[index] || 30}
+            defaultInput={age}
             onInputChange={(name, val) => {
               const newChildAges = [...inputValues.childAges];
-              newChildAges[index] = val;
+              newChildAges[index] = val; // Update the age for the specific child
               setInputValues((prevValues) => ({
                 ...prevValues,
                 childAges: newChildAges,
