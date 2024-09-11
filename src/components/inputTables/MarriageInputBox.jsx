@@ -6,6 +6,7 @@ import Input from "./inputTableComponenets/Input";
 import InputError from "./inputTableComponenets/InputError";
 import IncludeExcludeButtons from "./inputTableComponenets/IncludeExcludeButtons";
 import InputCounter from "./inputTableComponenets/InputCounter";
+import InputRadioButton from "./inputTableComponenets/InputRadioButtons";
 
 const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
   const [inputValues, setInputValues] = useState({
@@ -16,10 +17,12 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
     childCostPerYear: 25000,
     childAges: [],
     yearsOff: 5,
+    divorceAge: null,
     included: true,
   });
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [isDivorced, setIsDivorced] = useState("false");
 
   useEffect(() => {
     const {
@@ -29,13 +32,14 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
       income,
       childCostPerYear,
       childAges,
-      yearsOff,
+      divorceAge,
     } = inputValues;
 
     const inputs = [marriageAge, savings, checking, income, childCostPerYear];
     if (
       inputs.some((input) => isNaN(input) || input === null) ||
-      childAges.some((input) => isNaN(input) || input === null)
+      childAges.some((input) => isNaN(input) || input === null) ||
+      (divorceAge !== null && isNaN(divorceAge))
     ) {
       setErrorMessage("Invalid Input");
     } else if (marriageAge > lifeExpetency) {
@@ -48,6 +52,10 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
       setErrorMessage("Current age must be greater than age you have child");
     } else if (childAges.some((input) => input > lifeExpetency)) {
       setErrorMessage("Age you have child must be less than life expetency");
+    } else if (divorceAge !== null && divorceAge <= marriageAge) {
+      setErrorMessage("Divorce Age must be greater than marriage age");
+    } else if (divorceAge !== null && divorceAge > lifeExpetency) {
+      setErrorMessage("Divorce Age must be less than life expetency");
     } else {
       setErrorMessage("");
       setMarriageData(inputValues);
@@ -165,6 +173,32 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
             maxValue={150}
           />
         ))}
+
+        <InputRadioButton
+          header="Got Divorced"
+          options={[
+            { label: "Yes", value: "true" },
+            { label: "No", value: "false" },
+          ]}
+          selectedValue={isDivorced}
+          onChange={(value) => {
+            setIsDivorced(value);
+            setInputValues((prevValues) => ({
+              ...prevValues,
+              divorceAge: value === "true" ? 35 : null,
+            }));
+          }}
+        />
+
+        {isDivorced === "true" && (
+          <Input
+            name="divorceAge"
+            leftText="Age of Divorce"
+            defaultInput={inputValues.divorceAge}
+            onInputChange={handleInputChange}
+            maxValue={10000000}
+          />
+        )}
         <InputError visible={errorMessage !== ""} text={errorMessage} />
         <tbody style={{ height: "20px" }} />
         <IncludeExcludeButtons

@@ -188,7 +188,6 @@ const MortgageInputBox = ({
         {homePage && (
           <InputRadioButton
             header="Mortgage Price"
-            name="exampleRadio"
             infoText="Max will calculate the maximum possible house price"
             options={[
               { label: "Normal", value: "normal" },

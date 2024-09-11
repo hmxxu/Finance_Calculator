@@ -212,9 +212,8 @@ const Home = () => {
             >
               {carLoanType === "normal"
                 ? Array.from({ length: carLoanCount }).map((_, index) => (
-                    <div style={{ display: "flex" }}>
+                    <div style={{ display: "flex" }} key={index}>
                       <CarPaymentInputBox
-                        key={index}
                         setCarPaymentInputs={(newData) =>
                           updateCarPaymentData(index, newData)
                         }
@@ -229,9 +228,8 @@ const Home = () => {
                     </div>
                   ))
                 : carIntervalData.map((cd, index) => (
-                    <div style={{ display: "flex" }}>
+                    <div style={{ display: "flex" }} key={index}>
                       <FilledCarPaymentInputBox
-                        key={index}
                         header={"Car At Age " + cd.startAge}
                         price={cd.price}
                         startAge={cd.startAge}

@@ -15,6 +15,7 @@ const MontlhyExpensesInputBox = ({ setMonthlyExpensesData }) => {
     utilities: 150,
     subscriptions: 60,
     transportation: 150,
+    pet: 120,
     others: 200,
   });
 
@@ -106,10 +107,18 @@ const MontlhyExpensesInputBox = ({ setMonthlyExpensesData }) => {
         maxValue={100000}
       />
       <Input
+        name="pet"
+        leftText="Pet Expenses"
+        leftlabelText="$"
+        defaultInput={inputValues.pet}
+        onInputChange={handleInputChange}
+        maxValue={100000}
+      />
+      <Input
         name="others"
         leftText="Others"
         leftlabelText="$"
-        infoText="Other expenses to consider: student debt payments, internet, daycare, dog food, etc"
+        infoText="Other expenses to consider: student debt payments, internet, daycare, etc"
         defaultInput={inputValues.others}
         onInputChange={handleInputChange}
         maxValue={100000}

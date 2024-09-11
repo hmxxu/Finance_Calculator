@@ -61,7 +61,7 @@ function calculateResults(rd, md, cds, mad, med) {
 
   if (mad.included && mad.childAges.length > 0) {
     mad.childAges.forEach((childAge) => {
-      for (let age = childAge; age <= childAge + 18; age++) {
+      for (let age = childAge; age < childAge + 18; age++) {
         addPayment(childPaymentAtAge, age, mad.childCostPerYear);
       }
     });
@@ -165,6 +165,7 @@ function calculateResults(rd, md, cds, mad, med) {
 
   let income = taxedIncome(rd.income);
   let partnerIncome = taxedIncome(mad.income);
+  let totalChildPayments = 0;
 
   const table = [
     [
@@ -190,7 +191,13 @@ function calculateResults(rd, md, cds, mad, med) {
   for (let age = rd.currentAge; age <= rd.lifeExpectancy; age++) {
     let totalCheckingContribution = 0;
     let totalSavingsContribution = 0;
-    const married = mad.included && age >= mad.marriageAge;
+    const marriageStatus =
+      !mad.included || age < mad.marriageAge
+        ? "single"
+        : age < mad.divorceAge || mad.divorceAge == null
+        ? "married"
+        : "divorced";
+
     // Only the person with a higher income contribute durning career break
     const makeMore = income > partnerIncome;
 
@@ -198,6 +205,10 @@ function calculateResults(rd, md, cds, mad, med) {
     if (mad.included && mad.marriageAge === age) {
       totalCheckingContribution += mad.checking;
       totalSavingsContribution += mad.savings;
+    } else if (mad.included && mad.divorceAge === age) {
+      // Cut checking and savings in half if divorced
+      checking /= 2;
+      savings /= 2;
     }
 
     // Move all balance from checking to savings when retired
@@ -211,7 +222,7 @@ function calculateResults(rd, md, cds, mad, med) {
     // Simulate working/investing years
     if (age < rd.retirementAge) {
       // Partner contributions
-      if (married) {
+      if (marriageStatus === "married") {
         // If partner makes more or not on a career break can contribute
         if (!makeMore || !careerBreakAtAge.get(age)) {
           totalCheckingContribution += partnerIncome * checkingContribution;
@@ -220,19 +231,30 @@ function calculateResults(rd, md, cds, mad, med) {
       }
 
       // Personal contributions (if not on career break)
-      if (makeMore || !careerBreakAtAge.get(age)) {
+      if (
+        !careerBreakAtAge.get(age) ||
+        (makeMore && marriageStatus === "married")
+      ) {
         totalCheckingContribution += income * checkingContribution;
         totalSavingsContribution += income * savingContribution;
+      } else if (careerBreakAtAge.get(age) && marriageStatus === "divorced") {
+        // If the career break is happening while divorced only get half of the income
+        totalCheckingContribution += (income * checkingContribution) / 2;
+        totalSavingsContribution += (income * savingContribution) / 2;
       }
 
       // Monthly expenses
       checking -=
         calcInflatedPrice(med, averageInflationRate, age - rd.currentAge) *
         12 *
-        (married ? 2 : 1);
+        (marriageStatus === "married" ? 2 : 1);
 
-      // Car, mortage, child payments from checking when not retired
-      checking -= paymentAtAge.get(age) + childPaymentAtAge.get(age);
+      // Car, mortgage from checking when not retired
+      checking -= paymentAtAge.get(age);
+
+      // Child Payments
+      checking -=
+        childPaymentAtAge.get(age) / (marriageStatus === "divorced" ? 2 : 1);
     } else {
       // Retirement income needed taken from the savings (partner needs same amount)
       savings -=
@@ -240,14 +262,22 @@ function calculateResults(rd, md, cds, mad, med) {
           rd.retirementIncomeNeeded,
           averageInflationRate,
           age - rd.currentAge
-        ) * (married ? 2 : 1);
+        ) * (marriageStatus === "married" ? 2 : 1);
 
       // Retirement Income (partner has same amount)
-      totalSavingsContribution += rd.retirementIncome * (married ? 2 : 1);
+      totalSavingsContribution +=
+        rd.retirementIncome * (marriageStatus === "married" ? 2 : 1);
 
-      // Car, mortage, child payments from savings when retired
+      // Car, mortage from savings when retired
       savings -= paymentAtAge.get(age) + childPaymentAtAge.get(age);
+
+      // Child Payments
+      savings -=
+        childPaymentAtAge.get(age) / (marriageStatus === "divorced" ? 2 : 1);
     }
+
+    totalChildPayments +=
+      childPaymentAtAge.get(age) / (marriageStatus === "divorced" ? 2 : 1);
 
     // Down payments (always from from savings)
     savings -= downPaymentAtAge.get(age);
@@ -270,7 +300,8 @@ function calculateResults(rd, md, cds, mad, med) {
 
     // Income increase (partner has same amount)
     income += income * incomeIncrease;
-    if (married) partnerIncome += partnerIncome * incomeIncrease;
+    if (marriageStatus === "married")
+      partnerIncome += partnerIncome * incomeIncrease;
 
     if (savings < 0 || checking < 0) {
       canAfford = false;
@@ -317,10 +348,7 @@ function calculateResults(rd, md, cds, mad, med) {
     results.push(["Total in Car Payments", totalCarPaymentValues]);
 
   if (mad.childAges.length > 0)
-    results.push([
-      "Total in Child Payments",
-      mad.childAges.length * 18 * mad.childCostPerYear,
-    ]);
+    results.push(["Total in Child Payments", totalChildPayments]);
 
   return [table, results];
 }

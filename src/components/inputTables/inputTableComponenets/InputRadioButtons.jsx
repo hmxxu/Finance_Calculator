@@ -30,7 +30,7 @@ const InputRadioButton = ({
             <div
               style={{
                 marginLeft: "auto",
-                marginRight: "5px",
+                marginRight: "auto",
                 fontSize: "14px",
                 display: "flex",
               }}

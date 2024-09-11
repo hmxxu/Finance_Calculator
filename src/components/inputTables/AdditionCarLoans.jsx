@@ -59,7 +59,6 @@ const AdditionCarLoans = ({
       <InputHeader header="Addition Assets" />
       <InputRadioButton
         header="Amount of Cars"
-        name="exampleRadio"
         infoText="Normal: Decide number of car loans Interval: Adds a car loan every X years"
         options={[
           { label: "Normal", value: "normal" },
