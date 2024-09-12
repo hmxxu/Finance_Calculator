@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import InvestmentCalculator from "./pages/InvestmentCalculator";
 import RetirementAgeCalculator from "./pages/RetirementAgeCalculator";
@@ -9,7 +9,7 @@ import NoPage from "./pages/NoPage";
 function App() {
   return (
     <div>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route index element={<Home />} />
           <Route path="/home" element={<Home />} />
@@ -28,7 +28,7 @@ function App() {
           />
           <Route path="*" element={<NoPage />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 }
