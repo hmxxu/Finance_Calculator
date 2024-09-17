@@ -1,34 +1,4 @@
-// Calculates monthly payment for a loan given:
-// - P: Principal loan amount
-// - R: Monthly interest rate
-// - N: Total number of payments
-function calcMonthly(P, R, N) {
-  return (P * (R * Math.pow(1 + R, N))) / (Math.pow(1 + R, N) - 1);
-}
-
-// Calculates income after tax given a income
-function taxedIncome(income) {
-  const brackets = [
-    { limit: 11000, rate: 0.9 },
-    { limit: 44725, rate: 0.88 },
-    { limit: 95375, rate: 0.78 },
-    { limit: 182100, rate: 0.76 },
-    { limit: 231250, rate: 0.68 },
-    { limit: 578125, rate: 0.65 },
-    { limit: Infinity, rate: 0.63 },
-  ];
-
-  const bracket = brackets.find((b) => income <= b.limit);
-  return income * bracket.rate;
-}
-
-// Calculates inflated price in 'years' years given:
-// - value: Initial price
-// - inflationRate: Inflation rate per year
-// - years: number of years
-function calcInflatedPrice(value, inflationRate, years) {
-  return value * (1 + inflationRate) ** years;
-}
+import { taxedIncome, calcMonthly, calcInflatedPrice } from "./helperFunctions";
 
 // Adds payment to a map given a map, age, and value to add
 function addPayment(map, age, value) {

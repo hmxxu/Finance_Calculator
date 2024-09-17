@@ -6,6 +6,7 @@ import Input from "./inputTableComponenets/Input";
 import InputButton from "./inputTableComponenets/InputButton";
 import FilledInput from "./inputTableComponenets/FilledInput";
 import InputError from "./inputTableComponenets/InputError";
+const { taxedIncome } = require("../../helperFunctions");
 
 const RetirementInputBox = ({ setRetirementData, homePage }) => {
   const [inputValues, setInputValues] = useState({
@@ -72,22 +73,6 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
     setRetirementData(inputValues);
   }
 
-  function taxIncome(income) {
-    if (isNaN(income)) return 0;
-    const brackets = [
-      { limit: 11000, rate: 0.9 },
-      { limit: 44725, rate: 0.88 },
-      { limit: 95375, rate: 0.78 },
-      { limit: 182100, rate: 0.76 },
-      { limit: 231250, rate: 0.68 },
-      { limit: 578125, rate: 0.65 },
-      { limit: Infinity, rate: 0.63 },
-    ];
-
-    const bracket = brackets.find((b) => income <= b.limit);
-    return Math.round(income * bracket.rate);
-  }
-
   return (
     <table
       className="input-table"
@@ -130,7 +115,7 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
         leftText="Taxed Income"
         infoText="Income after federal income tax based on income bracket"
         leftlabelText="$"
-        inputValue={taxIncome(inputValues.income)}
+        inputValue={taxedIncome(inputValues.income)}
         rightText="/year"
       />
       <tbody style={{ height: "5px" }} />

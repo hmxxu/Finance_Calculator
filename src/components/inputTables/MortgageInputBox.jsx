@@ -8,6 +8,7 @@ import InputRadioButton from "./inputTableComponenets/InputRadioButtons";
 import FilledInput from "./inputTableComponenets/FilledInput";
 import InputError from "./inputTableComponenets/InputError";
 import IncludeExcludeButtons from "./inputTableComponenets/IncludeExcludeButtons";
+import { calcInflatedPrice } from "../../helperFunctions";
 
 const MortgageInputBox = ({
   setMortgageData,
@@ -82,23 +83,6 @@ const MortgageInputBox = ({
       priceType: value,
     }));
   };
-
-  function getInflatedPrice() {
-    if (
-      isNaN(inputValues.price) ||
-      isNaN(inputValues.startAge) ||
-      isNaN(inputValues.inflation)
-    )
-      return 0;
-    if (inputValues.priceType === "normal") {
-      return Math.round(
-        inputValues.price *
-          (1 + inputValues.inflation / 100) **
-            (inputValues.startAge - currentAge)
-      );
-    }
-    return "";
-  }
 
   return (
     <div style={{ position: "relative" }}>
@@ -182,7 +166,17 @@ const MortgageInputBox = ({
                   " years"
                 : undefined
             }
-            inputValue={getInflatedPrice()}
+            inputValue={
+              inputValues.priceType === "normal"
+                ? Math.round(
+                    calcInflatedPrice(
+                      inputValues.price,
+                      inputValues.inflation / 100,
+                      inputValues.startAge - currentAge
+                    )
+                  )
+                : ""
+            }
           />
         )}
         {homePage && (

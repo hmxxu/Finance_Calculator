@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import InputHeader from "./inputTableComponenets/InputHeader";
 import FilledInput from "./inputTableComponenets/FilledInput";
+import { calcInflatedPrice } from "../../helperFunctions";
 
 const FilledCarPaymentInputBox = ({
   header = "Car Payment Inputs",
@@ -17,15 +18,6 @@ const FilledCarPaymentInputBox = ({
     fees: 2300,
     inflation: 3.7,
   };
-
-  function getInflatedPrice() {
-    if (isNaN(price) || isNaN(startAge) || isNaN(inputValues.inflation))
-      return 0;
-
-    return Math.round(
-      price * (1 + inputValues.inflation / 100) ** (startAge - currentAge)
-    );
-  }
 
   return (
     <table className="input-table">
@@ -83,7 +75,13 @@ const FilledCarPaymentInputBox = ({
         infoText={
           "The price of the car in " + (startAge - currentAge) + " years"
         }
-        inputValue={getInflatedPrice()}
+        inputValue={Math.round(
+          calcInflatedPrice(
+            price,
+            inputValues.inflation / 100,
+            startAge - currentAge
+          )
+        )}
       />
     </table>
   );

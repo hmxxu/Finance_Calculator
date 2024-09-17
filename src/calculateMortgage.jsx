@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { calcMonthly } from "./helperFunctions";
 
 function calculateResults(price, downPayment, term, interest) {
   const propTypes = {
@@ -26,8 +27,7 @@ function calculateResults(price, downPayment, term, interest) {
   const N = term * 12; // Total number of payments (loan term in months)
 
   // Monthly payment calculation using the formula
-  const monthlyPayment =
-    (P * (R * Math.pow(1 + R, N))) / (Math.pow(1 + R, N) - 1);
+  const monthlyPayment = calcMonthly(P, R, N);
 
   // Total amount paid over the loan term
   const totalAmountPaid = monthlyPayment * N;

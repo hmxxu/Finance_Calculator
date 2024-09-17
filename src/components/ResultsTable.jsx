@@ -1,14 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import InputHeader from "./inputTables/inputTableComponenets/InputHeader";
+import { formatToMoney } from "../helperFunctions";
 
 const ResultsTable = ({ header, results, resetOnClick }) => {
-  // Formats balance into a money string with $ and commas
-  function formatToMoney(bal) {
-    bal = parseFloat(bal);
-    return "$" + bal.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
-
   return (
     <table className="input-table">
       <InputHeader header={header} />

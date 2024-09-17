@@ -7,6 +7,7 @@ import InputError from "./inputTableComponenets/InputError";
 import InputButton from "./inputTableComponenets/InputButton";
 import FilledInput from "./inputTableComponenets/FilledInput";
 import useMediaQuery from "../../hooks/useMediaQuery";
+import { calcInflatedPrice } from "../../helperFunctions";
 
 const CarPaymentInputBox = ({
   setCarPaymentInputs,
@@ -56,20 +57,6 @@ const CarPaymentInputBox = ({
   function calculateButton() {
     if (errorMessage !== "") return;
     setCarPaymentInputs(inputValues);
-  }
-
-  function getInflatedPrice() {
-    if (
-      isNaN(inputValues.price) ||
-      isNaN(inputValues.startAge) ||
-      isNaN(inputValues.inflation)
-    )
-      return 0;
-
-    return Math.round(
-      inputValues.price *
-        (1 + inputValues.inflation / 100) ** (inputValues.startAge - currentAge)
-    );
   }
 
   return (
@@ -163,7 +150,13 @@ const CarPaymentInputBox = ({
             (inputValues.startAge - currentAge) +
             " years"
           }
-          inputValue={getInflatedPrice()}
+          inputValue={Math.round(
+            calcInflatedPrice(
+              inputValues.price,
+              inputValues.inflation / 100,
+              inputValues.startAge - currentAge
+            )
+          )}
         />
       )}
       <InputError visible={errorMessage !== ""} text={errorMessage} />

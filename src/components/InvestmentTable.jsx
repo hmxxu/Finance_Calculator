@@ -1,12 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "../styles/investmentTable.css";
+import { formatToMoney } from "../helperFunctions";
 
 const InvestmentTable = ({ data }) => {
-  // Formats balance into a money string with $ and commas
-  function formatToMoney(bal) {
-    return "$" + bal.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
   return (
     <div
       className="investment-table-wrapper"

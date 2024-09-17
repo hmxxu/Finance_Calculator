@@ -1,24 +1,4 @@
-// Formats balance into a money string with $ and commas
-function formatToMoney(bal) {
-  bal = parseFloat(bal);
-  return "$" + bal.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-function taxIncome(income) {
-  if (isNaN(income)) return 0;
-  const brackets = [
-    { limit: 11000, rate: 0.9 },
-    { limit: 44725, rate: 0.88 },
-    { limit: 95375, rate: 0.78 },
-    { limit: 182100, rate: 0.76 },
-    { limit: 231250, rate: 0.68 },
-    { limit: 578125, rate: 0.65 },
-    { limit: Infinity, rate: 0.63 },
-  ];
-
-  const bracket = brackets.find((b) => income <= b.limit);
-  return income * bracket.rate;
-}
+const { taxedIncome, formatToMoney } = require("./helperFunctions");
 
 function calculateResults(
   currentAge,
@@ -35,7 +15,7 @@ function calculateResults(
   retirementIncomeNeeded,
   retirementIncome
 ) {
-  income = taxIncome(income);
+  income = taxedIncome(income);
   incomeIncrease /= 100;
   investReturnRate /= 100;
   savingsContribution /= 100;
