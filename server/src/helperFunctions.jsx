@@ -53,9 +53,17 @@ function calcMonthly(P, R, N) {
   return (P * (R * Math.pow(1 + R, N))) / (Math.pow(1 + R, N) - 1);
 }
 
+// Returns the sum of an array or 0 if any elements are NaN or null
+function sumArr(arr) {
+  const inputs = Object.values(arr);
+  if (inputs.some((input) => isNaN(input) || input === null)) return 0;
+  return inputs.reduce((acc, curr) => acc + Number(curr), 0);
+}
+
 module.exports = {
   taxedIncome,
   formatToMoney,
   calcInflatedPrice,
   calcMonthly,
+  sumArr,
 };

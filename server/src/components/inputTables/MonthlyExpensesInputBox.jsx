@@ -5,6 +5,7 @@ import InputHeader from "./inputTableComponenets/InputHeader";
 import Input from "./inputTableComponenets/Input";
 import InputError from "./inputTableComponenets/InputError";
 import FilledInput from "./inputTableComponenets/FilledInput";
+import { sumArr } from "../../helperFunctions";
 
 const MontlhyExpensesInputBox = ({ setMonthlyExpensesData }) => {
   const [inputValues, setInputValues] = useState({
@@ -27,7 +28,7 @@ const MontlhyExpensesInputBox = ({ setMonthlyExpensesData }) => {
       setErrorMessage("Invalid Input");
     } else {
       setErrorMessage("");
-      setMonthlyExpensesData(calcTotal());
+      setMonthlyExpensesData(inputValues);
     }
   }, [inputValues, setMonthlyExpensesData]);
 
@@ -37,14 +38,6 @@ const MontlhyExpensesInputBox = ({ setMonthlyExpensesData }) => {
       [name]: value,
     });
   };
-
-  function calcTotal() {
-    const inputs = Object.values(inputValues);
-    if (inputs.some((input) => isNaN(input) || input === null)) return 0;
-    const total = inputs.reduce((acc, curr) => acc + Number(curr), 0);
-
-    return total;
-  }
 
   return (
     <table className="input-table">
@@ -126,7 +119,7 @@ const MontlhyExpensesInputBox = ({ setMonthlyExpensesData }) => {
       <FilledInput
         leftText="Total"
         leftlabelText="$"
-        inputValue={calcTotal()}
+        inputValue={sumArr(inputValues)}
       />
 
       <InputError visible={errorMessage !== ""} text={errorMessage} />

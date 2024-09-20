@@ -1,4 +1,5 @@
-.investment-table {
+.investment-table,
+.saved-inputs-table {
   border: solid 1px #bbbbbb;
   margin-left: auto;
   margin-right: auto;
@@ -16,7 +17,8 @@
   padding-right: 10px;
 }
 
-.investment-table-col-header td {
+.investment-table-col-header td,
+.saved-inputs-table-col-header td {
   font-weight: bold;
   background-color: #336699;
   color: white;
@@ -25,8 +27,13 @@
   padding-bottom: 5px;
 }
 
-.investment-table tbody tr:nth-child(even) {
+.investment-table tbody tr:nth-child(even),
+.saved-inputs-table tbody tr:nth-child(even) {
   background-color: #f0f0f0; /* Gray background for even rows */
+}
+
+.saved-inputs-table td {
+  padding: 0 10px;
 }
 
 @media (max-width: 768px) {

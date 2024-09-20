@@ -15,6 +15,7 @@ import FilledCarPaymentInputBox from "../components/inputTables/FilledCarPayment
 import MarriageInputBox from "../components/inputTables/MarriageInputBox";
 import MontlhyExpensesInputBox from "../components/inputTables/MonthlyExpensesInputBox";
 import InputError from "../components/inputTables/inputTableComponenets/InputError";
+import SavedInputsTable from "../components/SavedInputsTable";
 
 const Home = () => {
   const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
@@ -33,6 +34,8 @@ const Home = () => {
 
   const [lastAssetInputs, setLastAssetInputs] = useState(null);
 
+  const [savedInputs, setSavedInputs] = useState(null);
+
   function calculateButton() {
     const carLoanData =
       carLoanType === "normal" ? carPaymentData : carIntervalData;
@@ -43,7 +46,7 @@ const Home = () => {
       marriageData,
       monthlyExpensesData
     );
-
+    console.log(res[0]);
     setResults(res);
   }
 
@@ -99,9 +102,41 @@ const Home = () => {
     recallCreateCDInterval();
   }, [retirementData?.currentAge, retirementData?.lifeExpectancy]);
 
+  const saveInputs = () => {
+    const carLoanData =
+      carLoanType === "normal" ? carPaymentData : carIntervalData;
+    fetch("http://localhost:8081/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        rd: retirementData,
+        md: mortgageData,
+        cds: carLoanData,
+        mad: marriageData,
+        med: monthlyExpensesData,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  };
+
+  function fetchSavedInputs() {
+    fetch("http://localhost:8081/savedInputs")
+      .then((res) => res.json())
+      .then((data) => {
+        setSavedInputs(data);
+        console.log(data);
+      })
+      .catch((err) => console.log(err));
+  }
+
   return (
     <div className="App">
       <Navbar />
+
       <div
         style={{
           marginTop: "5rem",
@@ -110,6 +145,27 @@ const Home = () => {
           gap: carLoanCount > 0 ? "2rem" : "0",
         }}
       >
+        <div
+          style={{
+            display: "flex",
+            paddingTop: "2rem",
+            maxWidth: "80%",
+            marginLeft: "auto",
+            marginRight: "auto",
+            overflowX: "auto",
+          }}
+        >
+          {savedInputs === null && (
+            <button
+              onClick={() => {
+                fetchSavedInputs();
+              }}
+            >
+              Load Prev Inputs
+            </button>
+          )}
+          <SavedInputsTable data={savedInputs} />
+        </div>
         {/* Inputs boxes  */}
         <div
           style={{
@@ -254,12 +310,25 @@ const Home = () => {
               text="Cannot afford payments, consider increasing income or decreasing expenses and/or assets"
             />
             <tbody style={{ height: isAboveMediumScreens ? "5px" : "20px" }} />
+            <div>
+              <button
+                onClick={() => saveInputs()}
+                style={{
+                  display: "flex",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              >
+                Save Inputs
+              </button>
+            </div>
             <InputButton
               calcOnClick={calculateButton}
               resetOnClick={() => window.location.reload()}
             />
           </table>
         </div>
+
         {/* Results */}
         {results && (
           <div className="horizontal-divider">

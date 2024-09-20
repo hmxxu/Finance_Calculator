@@ -1,4 +1,9 @@
-import { taxedIncome, calcMonthly, calcInflatedPrice } from "./helperFunctions";
+import {
+  taxedIncome,
+  calcMonthly,
+  calcInflatedPrice,
+  sumArr,
+} from "./helperFunctions";
 
 // Adds payment to a map given a map, age, and value to add
 function addPayment(map, age, value) {
@@ -215,7 +220,11 @@ function calculateResults(rd, md, cds, mad, med) {
 
       // Monthly expenses
       checking -=
-        calcInflatedPrice(med, averageInflationRate, age - rd.currentAge) *
+        calcInflatedPrice(
+          sumArr(med),
+          averageInflationRate,
+          age - rd.currentAge
+        ) *
         12 *
         (marriageStatus === "married" ? 2 : 1);
 
