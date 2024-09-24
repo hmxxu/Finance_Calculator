@@ -297,9 +297,35 @@ const SavedInputsTable = ({ inputData, childAges, setId, redirectURL }) => {
     </td>
   );
 
-  if (!data) return null;
+  if (!data)
+    return (
+      <div
+        style={{
+          color: "red",
+          fontFamily: "caption",
+          pointerEvents: "none",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+      >
+        Failing to fetch from database
+      </div>
+    );
 
-  if (data.length === 0) return <div>No Saved Inputs</div>;
+  if (data.length === 0)
+    return (
+      <div
+        style={{
+          color: "red",
+          fontFamily: "caption",
+          pointerEvents: "none",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+      >
+        No Saved Inputs
+      </div>
+    );
 
   return (
     <div
