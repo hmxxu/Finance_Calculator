@@ -9,6 +9,9 @@ import InputError from "./inputTableComponenets/InputError";
 const { taxedIncome } = require("../../helperFunctions");
 
 const RetirementInputBox = ({ setRetirementData, homePage }) => {
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("Invalid Input");
+
   const [inputValues, setInputValues] = useState({
     currentAge: 22,
     retirementAge: 67,
@@ -27,7 +30,17 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
     retirementIncome: 25000,
   });
 
-  const [errorMessage, setErrorMessage] = useState("Invalid Input");
+  useEffect(() => {
+    const hash = window.location.hash;
+    const queryString = hash.split("?")[1];
+
+    if (queryString) {
+      const queryParams = new URLSearchParams(queryString);
+      const data = JSON.parse(decodeURIComponent(queryParams.get("rd")));
+      if (data) setInputValues(data);
+    }
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     const {
@@ -72,6 +85,8 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
     if (errorMessage !== "") return;
     setRetirementData(inputValues);
   }
+
+  if (loading) return null;
 
   return (
     <table

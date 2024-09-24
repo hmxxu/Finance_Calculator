@@ -5,14 +5,23 @@ const dotenv = require("dotenv");
 const {
   createUsersTable,
   insertUsersQuery,
+  deleteUsersQuery,
   createSavedInputsTable,
   insertSavedInputsQuery,
+  deleteSavedInputsQuery,
   createUserCalculationsTable,
   insertUserCalculationsQuery,
+  deleteUserCalculationsTable,
   createCarsTable,
   insertCarsQuery,
+  getCarsByCalcIdQuery,
+  deleteCarsQuery,
   createChildAgesTable,
   insertChildAgesQuery,
+  deleteChildAgesTable,
+  insertSavedInputsPreset1,
+  insertSavedInputsPreset2,
+  getSavedInputsLength,
 } = require("./dbQueries");
 
 dotenv.config();
@@ -29,40 +38,79 @@ const pool = mysql.createPool({
 
 const app = express();
 app.use(cors());
-
-app.get("/savedInputs", (req, res) => {
-  const sql = "SELECT * FROM savedInputs";
-  pool.query(sql, (err, data) => {
-    if (err) return res.json(err);
-    return res.json(data);
-  });
-});
+app.use(express.json());
 
 app.listen(8081, () => {
   console.log("listening");
 });
 
-function createTables() {
-  createUsersTable();
-  createSavedInputsTable();
-  createUserCalculationsTable();
-  createCarsTable();
-  createChildAgesTable();
-}
-
-// Function that takes in a query and values runs it on the sql
+// Function that takes in a query and values, and runs it on the SQL database, returning a Promise
 function runQuery(query, values) {
-  pool.execute(query, values, (err, results) => {
-    if (err) {
-      console.error("Error inserting data:", err);
-      return;
-    }
-    console.log("Data inserted:", results);
+  return new Promise((resolve, reject) => {
+    pool.execute(query, values, (err, results) => {
+      if (err) {
+        console.error("Error inserting data:", err);
+        reject(err); // Reject the Promise with the error
+      } else {
+        resolve(results); // Resolve the Promise with the results
+      }
+    });
   });
 }
 
-app.use(express.json());
-app.post("/submit", (req, res) => {
+// Create all tables and a preset if they don't exist already
+(async function createTables() {
+  await runQuery(createSavedInputsTable);
+  await runQuery(createUsersTable);
+  await runQuery(createUserCalculationsTable);
+  await runQuery(createCarsTable);
+  await runQuery(createChildAgesTable);
+
+  // Check if savedInputs table is empty before inserting
+  if ((await runQuery(getSavedInputsLength))[0].count === 0) {
+    const result = await runQuery(insertSavedInputsPreset1);
+    const cds = [
+      [result.insertId, 30000, 60, 6.89, 20, 8.52, 2300, 25, 3.7],
+      [result.insertId, 35000, 60, 6.8, 20, 8.52, 2400, 35, 3.7],
+      [result.insertId, 40000, 60, 6.75, 20, 8.52, 2500, 45, 3.7],
+      [result.insertId, 45000, 60, 6.7, 20, 8.52, 2600, 55, 3.7],
+    ];
+
+    for (const cd of cds) {
+      await runQuery(insertCarsQuery, cd);
+    }
+
+    await runQuery(insertSavedInputsPreset2, [result.insertId]);
+  }
+})();
+
+// Get all saved inputs (will do per user later)
+app.get("/savedInputs", (req, res) => {
+  pool.query("SELECT * FROM savedInputs", (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+
+// Get all saved inputs (will do per user later)
+app.get("/childAges", (req, res) => {
+  pool.query("SELECT * FROM childages", (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+
+// Get all cars from a given calculation ID
+app.get("/cars/:calcId", (req, res) => {
+  const calcId = req.params.calcId;
+  pool.query(getCarsByCalcIdQuery, [calcId], (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+
+// Save inputs to multiple tables
+app.post("/submit", async (req, res) => {
   const { rd, md, cds, mad, med } = req.body;
 
   const { childAges, ...madWithoutChildAges } = mad;
@@ -75,7 +123,30 @@ app.post("/submit", (req, res) => {
     .concat(madValuesArray)
     .concat(mdValuesArray)
     .concat(medValuesArray);
-  runQuery(insertSavedInputsQuery, combinedValuesArray);
+  try {
+    // Wait for the insert query to complete and get the insert ID
+    const result = await runQuery(insertSavedInputsQuery, combinedValuesArray);
+
+    // Insert cars data
+    cds.forEach(async (cd) => {
+      const cdValuesArray = Object.values(cd);
+      cdValuesArray.unshift(result.insertId);
+      await runQuery(insertCarsQuery, cdValuesArray);
+    });
+
+    // Insert child ages
+    childAges.forEach(async (age) => {
+      await runQuery(insertChildAgesQuery, [result.insertId, age]);
+    });
+  } catch (error) {
+    console.error("Error saving data:", error);
+    res.status(500).send("Error saving data");
+  }
 });
 
-// insertIntoTestTable("Leo", 20, 50000);
+app.delete("/deleteSavedInput/:id", (req, res) => {
+  const { id } = req.params;
+  runQuery(deleteSavedInputsQuery, [id]);
+  runQuery(deleteCarsQuery, [id]);
+  runQuery(deleteChildAgesTable, [id]);
+});

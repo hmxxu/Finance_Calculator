@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import RetirementInputBox from "../components/inputTables/RetirementInputBox";
 import MortgageInputBox from "../components/inputTables/MortgageInputBox";
@@ -15,10 +16,10 @@ import FilledCarPaymentInputBox from "../components/inputTables/FilledCarPayment
 import MarriageInputBox from "../components/inputTables/MarriageInputBox";
 import MontlhyExpensesInputBox from "../components/inputTables/MonthlyExpensesInputBox";
 import InputError from "../components/inputTables/inputTableComponenets/InputError";
-import SavedInputsTable from "../components/SavedInputsTable";
 
 const Home = () => {
   const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
+  const navigate = useNavigate();
   const [retirementData, setRetirementData] = useState(null);
   const [mortgageData, setMortgageData] = useState(null);
   const [marriageData, setMarriageData] = useState(null);
@@ -34,8 +35,6 @@ const Home = () => {
 
   const [lastAssetInputs, setLastAssetInputs] = useState(null);
 
-  const [savedInputs, setSavedInputs] = useState(null);
-
   function calculateButton() {
     const carLoanData =
       carLoanType === "normal" ? carPaymentData : carIntervalData;
@@ -46,7 +45,6 @@ const Home = () => {
       marriageData,
       monthlyExpensesData
     );
-    console.log(res[0]);
     setResults(res);
   }
 
@@ -77,7 +75,7 @@ const Home = () => {
     let currentPrice = inputs.startPrice;
     for (
       let age = inputs.startAge;
-      age <= retirementData.lifeExpectancy;
+      age < retirementData.lifeExpectancy;
       age += inputs.xYears
     ) {
       cdIntervals.push({
@@ -123,16 +121,6 @@ const Home = () => {
       .catch((err) => console.log(err));
   };
 
-  function fetchSavedInputs() {
-    fetch("http://localhost:8081/savedInputs")
-      .then((res) => res.json())
-      .then((data) => {
-        setSavedInputs(data);
-        console.log(data);
-      })
-      .catch((err) => console.log(err));
-  }
-
   return (
     <div className="App">
       <Navbar />
@@ -149,23 +137,11 @@ const Home = () => {
           style={{
             display: "flex",
             paddingTop: "2rem",
-            maxWidth: "80%",
             marginLeft: "auto",
             marginRight: "auto",
-            overflowX: "auto",
+            // overflowX: "auto",
           }}
-        >
-          {savedInputs === null && (
-            <button
-              onClick={() => {
-                fetchSavedInputs();
-              }}
-            >
-              Load Prev Inputs
-            </button>
-          )}
-          <SavedInputsTable data={savedInputs} />
-        </div>
+        ></div>
         {/* Inputs boxes  */}
         <div
           style={{
@@ -280,6 +256,7 @@ const Home = () => {
                         lifeExpetency={
                           retirementData ? retirementData.lifeExpectancy : 0
                         }
+                        index={index}
                       />
                     </div>
                   ))
@@ -309,19 +286,29 @@ const Home = () => {
               }
               text="Cannot afford payments, consider increasing income or decreasing expenses and/or assets"
             />
-            <tbody style={{ height: isAboveMediumScreens ? "5px" : "20px" }} />
-            <div>
-              <button
-                onClick={() => saveInputs()}
-                style={{
-                  display: "flex",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-              >
-                Save Inputs
-              </button>
-            </div>
+            <tbody style={{ height: isAboveMediumScreens ? "15px" : "35px" }} />
+            <tbody>
+              <tr>
+                <td
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "1rem",
+                    justifyContent: "center",
+                  }}
+                >
+                  <button
+                    onClick={() => navigate("/saved-inputs")}
+                    className="save-button"
+                  >
+                    Load Saved Input
+                  </button>
+                  <button onClick={() => saveInputs()} className="save-button">
+                    Save Inputs
+                  </button>
+                </td>
+              </tr>
+            </tbody>
             <InputButton
               calcOnClick={calculateButton}
               resetOnClick={() => window.location.reload()}

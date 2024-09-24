@@ -13,6 +13,7 @@ const AdditionCarLoans = ({
   currentAge,
   lifeExpetency,
 }) => {
+  const [loading, setLoading] = useState(true);
   const [inputType, setInputType] = useState("normal");
   const [errorMessage, setErrorMessage] = useState("");
   const [carCount, setCarCount] = useState(0);
@@ -23,6 +24,19 @@ const AdditionCarLoans = ({
     startPrice: 40000,
     priceIncrease: 5000,
   });
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    const queryString = hash.split("?")[1];
+
+    if (queryString) {
+      const queryParams = new URLSearchParams(queryString);
+      const data = JSON.parse(decodeURIComponent(queryParams.get("cds")));
+      setCarCount(data.length);
+      setCarLoanCount(data.length);
+    }
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     const { startAge } = inputValues;
@@ -53,6 +67,8 @@ const AdditionCarLoans = ({
       [name]: value,
     });
   };
+
+  if (loading) return null;
 
   return (
     <table className="input-table">

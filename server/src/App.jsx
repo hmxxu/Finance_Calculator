@@ -1,5 +1,6 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import SavedInputs from "./pages/SavedInputs";
 import InvestmentCalculator from "./pages/InvestmentCalculator";
 import RetirementAgeCalculator from "./pages/RetirementAgeCalculator";
 import MortgageCalculator from "./pages/MortgageCalculator";
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route index element={<Home />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/saved-inputs" element={<SavedInputs />} />
           <Route
             path="/investment-calculator"
             element={<InvestmentCalculator />}

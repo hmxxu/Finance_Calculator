@@ -14,7 +14,12 @@ const CarPaymentInputBox = ({
   homePage = false,
   currentAge,
   lifeExpetency,
+  index,
 }) => {
+  const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [inputValues, setInputValues] = useState({
     price: 45000,
     term: 60,
@@ -26,8 +31,17 @@ const CarPaymentInputBox = ({
     inflation: 3.7,
   });
 
-  const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
-  const [errorMessage, setErrorMessage] = useState("");
+  useEffect(() => {
+    const hash = window.location.hash;
+    const queryString = hash.split("?")[1];
+
+    if (queryString) {
+      const queryParams = new URLSearchParams(queryString);
+      const data = JSON.parse(decodeURIComponent(queryParams.get("cds")));
+      if (data && data.length >= index + 1) setInputValues(data[index]);
+    }
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     const { startAge, term } = inputValues;
@@ -58,6 +72,8 @@ const CarPaymentInputBox = ({
     if (errorMessage !== "") return;
     setCarPaymentInputs(inputValues);
   }
+
+  if (loading) return null;
 
   return (
     <table className="input-table">

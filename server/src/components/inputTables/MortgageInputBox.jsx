@@ -16,6 +16,10 @@ const MortgageInputBox = ({
   currentAge,
   lifeExpetency,
 }) => {
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [prevInputValues, setPrevInputValues] = useState(null);
+
   const [inputValues, setInputValues] = useState({
     price: 250000,
     downPayment: 20,
@@ -27,7 +31,17 @@ const MortgageInputBox = ({
     included: true,
   });
 
-  const [errorMessage, setErrorMessage] = useState("");
+  useEffect(() => {
+    const hash = window.location.hash;
+    const queryString = hash.split("?")[1];
+
+    if (queryString) {
+      const queryParams = new URLSearchParams(queryString);
+      const data = JSON.parse(decodeURIComponent(queryParams.get("md")));
+      if (data) setInputValues(data);
+    }
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     const {
@@ -38,7 +52,12 @@ const MortgageInputBox = ({
       startAge,
       priceType,
       inflation,
+      included,
     } = inputValues;
+    if (!included) {
+      setMortgageData(inputValues);
+      return;
+    }
 
     let inputs;
     // Ignore price if priceType is MAX
@@ -83,6 +102,8 @@ const MortgageInputBox = ({
       priceType: value,
     }));
   };
+
+  if (loading) return null;
 
   return (
     <div style={{ position: "relative" }}>
@@ -212,10 +233,21 @@ const MortgageInputBox = ({
             <tbody style={{ height: "15px" }} />
             <IncludeExcludeButtons
               setIncluded={(boo) => {
-                setInputValues((prevValues) => ({
-                  ...prevValues,
-                  included: boo,
-                }));
+                if (!inputValues.included && boo) {
+                  setInputValues(prevInputValues);
+                } else if (inputValues.included && !boo) {
+                  setPrevInputValues(inputValues);
+                  setInputValues({
+                    price: null,
+                    downPayment: null,
+                    term: null,
+                    interest: null,
+                    startAge: null,
+                    priceType: null,
+                    inflation: null,
+                    included: false,
+                  });
+                }
               }}
             />
           </React.Fragment>

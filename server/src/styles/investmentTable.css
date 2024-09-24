@@ -7,8 +7,12 @@
   border-spacing: 10px 0;
 }
 
+.saved-inputs-table {
+  text-align: center;
+}
+
 .investment-table td {
-  padding: 0 30px;
+  padding: 0 20px;
 }
 .investment-table td:first-child {
   padding-left: 10px;
@@ -29,21 +33,86 @@
 
 .investment-table tbody tr:nth-child(even),
 .saved-inputs-table tbody tr:nth-child(even) {
-  background-color: #f0f0f0; /* Gray background for even rows */
+  background-color: #f0f0f0;
 }
 
-.saved-inputs-table td {
+.investment-table tbody tr:nth-child(odd),
+.saved-inputs-table tbody tr:nth-child(odd) {
+  background-color: white;
+}
+
+.saved-inputs-table td,
+.saved-car-table td {
   padding: 0 10px;
+}
+
+.saved-inputs-table-expand {
+  display: flex;
+  background-color: #f0f0f0;
+  border: solid 1px #bbbbbb;
+  border-left: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.saved-inputs-table-expand:hover {
+  background-color: lightgray;
+}
+
+.investment-table-wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  overflow-x: auto;
+  max-width: 90%;
+}
+
+.action-load-button,
+.action-remove-button,
+.action-show-button {
+  color: white;
+  border: none;
+  margin: 1px;
+  padding: 5px;
+  font-size: 12px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: auto;
+  margin-right: auto;
+  transition: 0.5s;
+}
+
+.action-load-button {
+  background-color: #4c7b25;
+}
+
+.action-remove-button {
+  background-color: #e52a2d;
+}
+
+.action-show-button {
+  background-color: #ababab;
+}
+
+.action-load-button:hover,
+.action-remove-button:hover,
+.action-show-button:hover,
+.action-load-button:active,
+.action-remove-button:active,
+.action-show-button:active {
+  background-color: #444444;
 }
 
 @media (max-width: 768px) {
   .investment-table-wrapper {
-    margin-left: auto;
-    margin-right: auto;
-    overflow-x: auto;
     width: 97%;
   }
-  .investment-table {
+
+  .investment-table,
+  .saved-inputs-table {
     width: 95%;
     max-width: 100%;
     font-size: 12px;
@@ -59,5 +128,10 @@
 
   .investment-table td:last-child {
     padding-right: 2px;
+  }
+
+  .action-button {
+    font-size: 8px;
+    padding: 4px;
   }
 }

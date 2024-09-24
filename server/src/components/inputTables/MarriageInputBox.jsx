@@ -9,6 +9,11 @@ import InputCounter from "./inputTableComponenets/InputCounter";
 import InputRadioButton from "./inputTableComponenets/InputRadioButtons";
 
 const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isDivorced, setIsDivorced] = useState("false");
+  const [prevInputValues, setPrevInputValues] = useState(null);
+
   const [inputValues, setInputValues] = useState({
     marriageAge: 30,
     savings: 120000,
@@ -21,8 +26,20 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
     included: true,
   });
 
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isDivorced, setIsDivorced] = useState("false");
+  useEffect(() => {
+    const hash = window.location.hash;
+    const queryString = hash.split("?")[1];
+
+    if (queryString) {
+      const queryParams = new URLSearchParams(queryString);
+      const data = JSON.parse(decodeURIComponent(queryParams.get("mad")));
+      if (data) {
+        if (data.divorceAge) setIsDivorced("true");
+        setInputValues(data);
+      }
+    }
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     const {
@@ -33,7 +50,12 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
       childCostPerYear,
       childAges,
       divorceAge,
+      included,
     } = inputValues;
+    if (!included) {
+      setMarriageData(inputValues);
+      return;
+    }
 
     const inputs = [marriageAge, savings, checking, income, childCostPerYear];
     if (
@@ -85,6 +107,8 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
       };
     });
   };
+
+  if (loading) return null;
 
   return (
     <div style={{ position: "relative" }}>
@@ -203,10 +227,22 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
         <tbody style={{ height: "20px" }} />
         <IncludeExcludeButtons
           setIncluded={(boo) => {
-            setInputValues((prevValues) => ({
-              ...prevValues,
-              included: boo,
-            }));
+            if (!inputValues.included && boo) {
+              setInputValues(prevInputValues);
+            } else if (inputValues.included && !boo) {
+              setPrevInputValues(inputValues);
+              setInputValues({
+                marriageAge: null,
+                savings: null,
+                checking: null,
+                income: null,
+                childCostPerYear: null,
+                childAges: [],
+                yearsOff: null,
+                divorceAge: null,
+                included: false,
+              });
+            }
           }}
         />
       </table>

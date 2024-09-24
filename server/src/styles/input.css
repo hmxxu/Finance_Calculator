@@ -87,28 +87,29 @@
   transform: translateX(-50%);
 }
 
-.calculate-button {
+.calculate-button,
+.reset-button,
+.save-button {
   color: white;
   border: 0px;
   padding: 5px;
   font-size: 16px;
+  font-weight: bold;
+}
+
+.calculate-button {
   background-color: #4c7b25;
 }
-
-.calculate-button:hover {
-  background-color: #444444;
-  transition: 0.5s;
-}
-
 .reset-button {
-  color: white;
-  border: 0px;
-  padding: 5px;
-  font-size: 16px;
   background-color: #ababab;
 }
+.save-button {
+  background-color: #336699;
+}
 
-.reset-button:hover {
+.calculate-button:hover,
+.reset-button:hover,
+.save-button:hover {
   background-color: #444444;
   transition: 0.5s;
 }
@@ -161,23 +162,11 @@
   }
 
   .calculate-button,
-  .reset-button {
+  .reset-button,
+  .save-button {
     width: 100%;
     font-size: 14px;
     padding: 8px;
-  }
-
-  .calculate-button:hover {
-    background-color: #4c7b25;
-  }
-
-  .calculate-button:active,
-  .reset-button:active {
-    background-color: #444444;
-  }
-
-  .reset-button:hover {
-    background-color: #ababab;
   }
 
   .overlay {

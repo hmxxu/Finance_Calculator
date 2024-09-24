@@ -8,6 +8,9 @@ import FilledInput from "./inputTableComponenets/FilledInput";
 import { sumArr } from "../../helperFunctions";
 
 const MontlhyExpensesInputBox = ({ setMonthlyExpensesData }) => {
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [inputValues, setInputValues] = useState({
     groceryFood: 200,
     healthInsurance: 500,
@@ -20,7 +23,17 @@ const MontlhyExpensesInputBox = ({ setMonthlyExpensesData }) => {
     others: 200,
   });
 
-  const [errorMessage, setErrorMessage] = useState("");
+  useEffect(() => {
+    const hash = window.location.hash;
+    const queryString = hash.split("?")[1];
+
+    if (queryString) {
+      const queryParams = new URLSearchParams(queryString);
+      const data = JSON.parse(decodeURIComponent(queryParams.get("med")));
+      if (data) setInputValues(data);
+    }
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     const inputs = Object.values(inputValues);
@@ -38,6 +51,8 @@ const MontlhyExpensesInputBox = ({ setMonthlyExpensesData }) => {
       [name]: value,
     });
   };
+
+  if (loading) return null;
 
   return (
     <table className="input-table">
@@ -121,9 +136,7 @@ const MontlhyExpensesInputBox = ({ setMonthlyExpensesData }) => {
         leftlabelText="$"
         inputValue={sumArr(inputValues)}
       />
-
       <InputError visible={errorMessage !== ""} text={errorMessage} />
-
       <tbody>
         <tr>
           <td style={{ paddingTop: "5px" }}></td>
