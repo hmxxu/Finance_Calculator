@@ -1,3 +1,8 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: white;
+}
+
 .App {
   background-color: white;
 }
@@ -117,7 +122,7 @@ body {
     display: flex;
     justify-content: center;
   }
-  
+
   .investment-graph {
     border: 2px solid black;
     padding-top: 0px;
