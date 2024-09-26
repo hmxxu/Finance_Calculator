@@ -9,6 +9,7 @@ DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD="{your password}"
 DB_NAME="{your db name}"
+OPENAI_API_KEY="{your openai api key}"
 ```
 
 3. **Start the backend:**
@@ -26,11 +27,3 @@ npm start
 # Next Steps
 
 ## Create unit tests
-
-## **Create a chatbot to help users fill inputs**
-
-### Chatbot should be able:
-
-- Anwser any question related to fill out the fourm
-- Cite any information with a hyperlink
-- Explain any calculations made
