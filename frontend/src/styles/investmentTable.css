@@ -106,6 +106,15 @@
   background-color: #444444;
 }
 
+.error-text {
+  font-size: 30px;
+  color: red;
+  font-family: caption;
+  pointer-events: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 @media (max-width: 768px) {
   .investment-table-wrapper {
     width: 97%;

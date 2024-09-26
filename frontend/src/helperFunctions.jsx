@@ -60,10 +60,32 @@ function sumArr(arr) {
   return inputs.reduce((acc, curr) => acc + Number(curr), 0);
 }
 
+// Smooth scrolls in a element
+function smoothScroll(element, duration = 1000, end = element.scrollHeight) {
+  const start = element.scrollTop;
+  const change = end - start;
+  const startTime = performance.now();
+
+  const animateScroll = (currentTime) => {
+    const elapsedTime = currentTime - startTime;
+    const progress = Math.min(elapsedTime / duration, 1);
+    element.scrollTop = start + change * easeInOutQuad(progress);
+
+    if (progress < 1) {
+      requestAnimationFrame(animateScroll);
+    }
+  };
+
+  const easeInOutQuad = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
+
+  requestAnimationFrame(animateScroll);
+}
+
 module.exports = {
   taxedIncome,
   formatToMoney,
   calcInflatedPrice,
   calcMonthly,
   sumArr,
+  smoothScroll,
 };

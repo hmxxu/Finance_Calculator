@@ -301,31 +301,25 @@ const SavedInputsTable = ({ inputData, childAges, setId, redirectURL }) => {
     return (
       <div
         style={{
-          color: "red",
-          fontFamily: "caption",
-          pointerEvents: "none",
-          marginLeft: "auto",
-          marginRight: "auto",
+          isplay: "flex",
+          flexDirection: "column",
         }}
       >
-        Failing to fetch from database
+        <div className="error-text">Failed to fetch data from database</div>
+        <button
+          className="reset-button"
+          style={{
+            width: "100%",
+          }}
+          onClick={() => window.location.reload()}
+        >
+          Refresh
+        </button>
       </div>
     );
 
   if (data.length === 0)
-    return (
-      <div
-        style={{
-          color: "red",
-          fontFamily: "caption",
-          pointerEvents: "none",
-          marginLeft: "auto",
-          marginRight: "auto",
-        }}
-      >
-        No Saved Inputs
-      </div>
-    );
+    return <div className="error-text">No Saved Inputs</div>;
 
   return (
     <div
@@ -400,7 +394,6 @@ const SavedInputsTable = ({ inputData, childAges, setId, redirectURL }) => {
                         style={{
                           textAlign: "center",
                           verticalAlign: "middle",
-                          //   height: "100px",
                         }}
                       >
                         <LoadButton id={input.calc_id} index={index} />
