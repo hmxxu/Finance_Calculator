@@ -10,4 +10,3 @@ node_modules/
 # Optional: other files to ignore
 .DS_Store
 .vscode/
-tmp.sql

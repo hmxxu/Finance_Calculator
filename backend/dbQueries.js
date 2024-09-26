@@ -1,4 +1,4 @@
-const createUsersTable = `
+export const createUsersTable = `
 CREATE TABLE
     IF NOT EXISTS users (
         user_id INT NOT NULL AUTO_INCREMENT,
@@ -8,18 +8,18 @@ CREATE TABLE
     );
 `;
 
-const insertUsersQuery = `
+export const insertUsersQuery = `
     INSERT INTO users (
         first_name,
         last_name
     ) VALUES (?, ?);
 `;
 
-const deleteUsersQuery = `
+export const deleteUsersQuery = `
 DELETE FROM users WHERE user_id = ?
 `;
 
-const createSavedInputsTable = `
+export const createSavedInputsTable = `
 CREATE TABLE
     IF NOT EXISTS savedInputs (
         calc_id INT NOT NULL AUTO_INCREMENT,
@@ -68,7 +68,7 @@ CREATE TABLE
     );
 `;
 
-const insertSavedInputsQuery = `
+export const insertSavedInputsQuery = `
     INSERT INTO savedInputs (
         -- Retirement Inputs
         rd_currentAge,
@@ -114,11 +114,11 @@ const insertSavedInputsQuery = `
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 `;
 
-const deleteSavedInputsQuery = `
+export const deleteSavedInputsQuery = `
 DELETE FROM savedinputs WHERE calc_id = ?
 `;
 
-const createUserCalculationsTable = `
+export const createUserCalculationsTable = `
 CREATE TABLE
     IF NOT EXISTS user_calculations (
         user_id INT NOT NULL,
@@ -129,18 +129,18 @@ CREATE TABLE
     );
 `;
 
-const insertUserCalculationsQuery = `
+export const insertUserCalculationsQuery = `
     INSERT INTO user_calculations (
         user_id,
         calc_id
     ) VALUES (?, ?);
 `;
 
-const deleteUserCalculationsTable = `
+export const deleteUserCalculationsTable = `
 DELETE FROM user_calculations WHERE calc_id = ?
 `;
 
-const createCarsTable = `
+export const createCarsTable = `
 CREATE TABLE
     IF NOT EXISTS cars (
         car_id INT NOT NULL AUTO_INCREMENT,
@@ -158,7 +158,7 @@ CREATE TABLE
     );
 `;
 
-const insertCarsQuery = `
+export const insertCarsQuery = `
     INSERT INTO cars (
         calc_id,
         price,
@@ -172,15 +172,15 @@ const insertCarsQuery = `
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 `;
 
-const getCarsByCalcIdQuery = `
+export const getCarsByCalcIdQuery = `
 SELECT * FROM cars WHERE calc_id = ?;
 `;
 
-const deleteCarsQuery = `
+export const deleteCarsQuery = `
 DELETE FROM cars WHERE calc_id = ?
 `;
 
-const createChildAgesTable = `
+export const createChildAgesTable = `
 CREATE TABLE
     IF NOT EXISTS childages (
         child_id INT NOT NULL AUTO_INCREMENT,
@@ -191,22 +191,22 @@ CREATE TABLE
     );
 `;
 
-const insertChildAgesQuery = `
+export const insertChildAgesQuery = `
     INSERT INTO childages (
         calc_id,
         age
     ) VALUES (?, ?);
 `;
 
-const getChildAgesQuery = `
+export const getChildAgesQuery = `
 SELECT * FROM childages WHERE calc_id = ?;
 `;
 
-const deleteChildAgesTable = `
+export const deleteChildAgesTable = `
 DELETE FROM childages WHERE calc_id = ?
 `;
 
-const dropAllTables = `
+export const dropAllTables = `
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS cars;
 DROP TABLE IF EXISTS childages;
@@ -216,7 +216,7 @@ DROP TABLE IF EXISTS savedinputs;
 SET FOREIGN_KEY_CHECKS = 1;
 `;
 
-const insertSavedInputsPreset1 = `
+export const insertSavedInputsPreset1 = `
 INSERT IGNORE INTO savedInputs (
     rd_currentAge,
     rd_retirementAge,
@@ -302,33 +302,10 @@ VALUES
     );
 `;
 
-const insertSavedInputsPreset2 = `
+export const insertSavedInputsPreset2 = `
 INSERT IGNORE INTO childages (calc_id, age) VALUES (?, 30);
 `;
 
-const getSavedInputsLength = `
+export const getSavedInputsLength = `
 SELECT COUNT(*) AS count FROM savedinputs;
 `;
-
-module.exports = {
-  createUsersTable,
-  insertUsersQuery,
-  deleteUsersQuery,
-  createSavedInputsTable,
-  insertSavedInputsQuery,
-  deleteSavedInputsQuery,
-  createUserCalculationsTable,
-  insertUserCalculationsQuery,
-  deleteUserCalculationsTable,
-  createCarsTable,
-  insertCarsQuery,
-  getCarsByCalcIdQuery,
-  deleteCarsQuery,
-  createChildAgesTable,
-  insertChildAgesQuery,
-  deleteChildAgesTable,
-  dropAllTables,
-  insertSavedInputsPreset1,
-  insertSavedInputsPreset2,
-  getSavedInputsLength,
-};

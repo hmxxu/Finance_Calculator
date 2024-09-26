@@ -30,17 +30,7 @@ const SavedCarsTable = ({ data, id }) => {
 
   if (data.length === 0)
     return (
-      <div
-        style={{
-          color: "red",
-          fontFamily: "caption",
-          pointerEvents: "none",
-          marginLeft: "auto",
-          marginRight: "auto",
-        }}
-      >
-        Calculation#{id} does not have any car
-      </div>
+      <div className="error-text">Calculation#{id} does not have any car</div>
     );
 
   return (

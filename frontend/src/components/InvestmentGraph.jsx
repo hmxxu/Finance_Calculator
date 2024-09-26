@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Line } from "react-chartjs-2";
+import "../styles/investmentGraph.css";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -70,8 +71,8 @@ const InvestmentGraph = ({ data, dataType }) => {
   };
 
   return (
-    <div className="investment-graph-wrapper">
-      <div className="investment-graph">
+    <div id="investment-graph-wrapper">
+      <div id="investment-graph">
         <div style={{ textAlign: "center" }}>{yFormatted} By Year</div>
         {data && <Line data={chartData} options={options} />}
       </div>

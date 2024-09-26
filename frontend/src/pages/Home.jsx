@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import RetirementInputBox from "../components/inputTables/RetirementInputBox";
 import MortgageInputBox from "../components/inputTables/MortgageInputBox";
@@ -16,6 +16,7 @@ import FilledCarPaymentInputBox from "../components/inputTables/FilledCarPayment
 import MarriageInputBox from "../components/inputTables/MarriageInputBox";
 import MontlhyExpensesInputBox from "../components/inputTables/MonthlyExpensesInputBox";
 import InputError from "../components/inputTables/inputTableComponenets/InputError";
+import AiChatbot from "../components/AiChatbot";
 
 const Home = () => {
   const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
@@ -55,6 +56,16 @@ const Home = () => {
       return updatedData;
     });
   };
+
+  // Scroll to results
+  useEffect(() => {
+    if (results) {
+      window.scrollTo({
+        top: isAboveMediumScreens ? 1335 : 2320,
+        behavior: "smooth",
+      });
+    }
+  }, [results]);
 
   useEffect(() => {
     // If carLoanCount is decremented, trim carPaymentData
@@ -103,7 +114,7 @@ const Home = () => {
   const saveInputs = () => {
     const carLoanData =
       carLoanType === "normal" ? carPaymentData : carIntervalData;
-    fetch("http://localhost:8081/submit", {
+    fetch("http://localhost:8081/insertSavedInputs", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -354,6 +365,7 @@ const Home = () => {
           </div>
         )}
       </div>
+      <AiChatbot />
     </div>
   );
 };
