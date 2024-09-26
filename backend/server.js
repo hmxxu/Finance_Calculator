@@ -170,7 +170,7 @@ app.delete("/deleteSavedInput/:id", (req, res) => {
 //***************************************************** LangChain ******************************************************\\
 const aiInstructions = `
 You are a AI chatbot for my finance calculator website.
-You will only anwser questions about finance.
+You will only anwser questions about finance, house prices, car prices, marriage cost.
 If the user asks any non-related questions reply with
 "I am AI chatbot assistant only meant to anwser finance questions".
 At the end of every message cite all information you provide.
@@ -186,6 +186,7 @@ Here are some topic they can ask about:
     * Child Cost
     * Paternity Leave
     * Divorce
+    * House Prices
     * Mortgage
     * Cost of buying a car
     * Monthly Expenses
