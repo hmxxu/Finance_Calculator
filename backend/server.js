@@ -154,6 +154,9 @@ app.post("/insertSavedInputs", async (req, res) => {
     childAges.forEach(async (age) => {
       await runQuery(insertChildAgesQuery, [result.insertId, age]);
     });
+    return res
+      .status(200)
+      .json({ message: "Saved inputs retrieved successfully" });
   } catch (error) {
     console.error("Error saving data:", error);
     res.status(500).send("Error saving data");
@@ -165,6 +168,9 @@ app.delete("/deleteSavedInput/:id", (req, res) => {
   runQuery(deleteSavedInputsQuery, [id]);
   runQuery(deleteCarsQuery, [id]);
   runQuery(deleteChildAgesTable, [id]);
+  return res
+    .status(200)
+    .json({ message: "Deleted Calcalation" + id + " successfully" });
 });
 
 //***************************************************** LangChain ******************************************************\\
@@ -232,7 +238,12 @@ const retrieverChain = await createHistoryAwareRetriever({
 });
 
 // Fake chat history
-const chatHistory = [new SystemMessage(aiInstructions)];
+const chatHistory = [
+  new SystemMessage(aiInstructions),
+  new AIMessage(
+    "Hello, I am your AI chatbot assistant. Feel free to ask me any questions about finance."
+  ),
+];
 
 const prompt = ChatPromptTemplate.fromMessages([
   [

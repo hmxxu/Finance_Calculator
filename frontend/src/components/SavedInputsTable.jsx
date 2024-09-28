@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { deleteSavedInputById } from "../fetchFunctions";
 import "../styles/investmentTable.css";
 import expandRight from "../svgs/expandRight.svg";
 
-const SavedInputsTable = ({ inputData, childAges, setId, redirectURL }) => {
+const SavedInputsTable = ({ inputData, childAges, setId, deleteId, redirectURL }) => {
   // Sums and returns monthly expenses
   function getMonthlyExpenseTotal(inputs) {
     if (!inputs) return;
@@ -106,7 +105,7 @@ const SavedInputsTable = ({ inputData, childAges, setId, redirectURL }) => {
       "mad_divorceAge",
       {
         name: "Divorce Age",
-        process: (x) => (x ? x : "N/A"),
+        process: (x) => (x !== 999 ? x : "N/A"),
       },
     ],
     [
@@ -287,7 +286,7 @@ const SavedInputsTable = ({ inputData, childAges, setId, redirectURL }) => {
       <button
         className="action-remove-button"
         onClick={() => {
-          deleteSavedInputById(id);
+          deleteId(id);
           const newData = data.filter((_, i) => i !== index);
           setData(newData);
         }}

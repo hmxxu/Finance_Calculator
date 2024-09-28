@@ -73,7 +73,7 @@ const InvestmentGraph = ({ data, dataType }) => {
   return (
     <div id="investment-graph-wrapper">
       <div id="investment-graph">
-        <div style={{ textAlign: "center" }}>{yFormatted} By Year</div>
+        <div id="investment-graph-header">{yFormatted} By Year</div>
         {data && <Line data={chartData} options={options} />}
       </div>
     </div>

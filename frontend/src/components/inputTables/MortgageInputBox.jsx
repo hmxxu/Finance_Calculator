@@ -37,8 +37,33 @@ const MortgageInputBox = ({
 
     if (queryString) {
       const queryParams = new URLSearchParams(queryString);
-      const data = JSON.parse(decodeURIComponent(queryParams.get("md")));
-      if (data) setInputValues(data);
+
+      let data;
+      try {
+        data = JSON.parse(decodeURIComponent(queryParams.get("md")));
+      } catch (error) {
+        throw new Error("Malformed 'md' parameter: Invalid JSON structure.");
+      }
+      const keys = [
+        "price",
+        "downPayment",
+        "term",
+        "interest",
+        "startAge",
+        "priceType",
+        "inflation",
+        "included",
+      ];
+      if (
+        data &&
+        typeof data === "object" &&
+        keys.every((key) => key in data) &&
+        !Object.values(data).some((value) => value === null)
+      ) {
+        setInputValues(data);
+      } else {
+        console.log("md params incorrect");
+      }
     }
     setLoading(false);
   }, []);
@@ -54,10 +79,8 @@ const MortgageInputBox = ({
       inflation,
       included,
     } = inputValues;
-    if (!included) {
-      setMortgageData(inputValues);
-      return;
-    }
+    if (homePage) setMortgageData(inputValues);
+    if (!included) return;
 
     let inputs;
     // Ignore price if priceType is MAX
@@ -71,14 +94,14 @@ const MortgageInputBox = ({
 
     if (inputs.some((input) => isNaN(input) || input === null)) {
       setErrorMessage("Invalid Input");
+      setMortgageData(null);
     } else if (currentAge > startAge) {
       setErrorMessage("Current Age must be less mortgage start age");
+      setMortgageData(null);
     } else if (homePage && startAge + term > lifeExpetency) {
       setErrorMessage("Mortgage must end before life expentency");
+      setMortgageData(null);
     } else {
-      if (homePage) {
-        setMortgageData(inputValues);
-      }
       setErrorMessage("");
     }
   }, [inputValues, currentAge, lifeExpetency, homePage, setMortgageData]);

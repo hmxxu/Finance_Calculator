@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { fetchData } from "../fetchFunctions";
 import SavedInputsTable from "../components/SavedInputsTable";
 import SavedCarsTable from "../components/SavedCarsTable";
+import Popups from "../components/Popups";
 
 const SavedInputs = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const SavedInputs = () => {
   const [carData, setCarData] = useState(null);
   const [savedInputsData, setSavedInputsData] = useState(null);
   const [childAges, setChildAges] = useState(null);
+  const [popupTexts, setPopupsTexts] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -34,6 +36,23 @@ const SavedInputs = () => {
       }
     })();
   }, [id]);
+
+  const deleteSavedInputById = (id) => {
+    fetch(`http://localhost:8081/deleteSavedInput/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          addPopup("Failed to delete row", "red");
+          throw new Error("Failed to delete row");
+        }
+        addPopup("Delete Calculation#" + id, "red");
+      })
+      .catch((err) => console.error("Error:", err));
+  };
 
   // Redirects to calculator page with preset values
   const redirectURL = (data, childAges) => {
@@ -67,9 +86,17 @@ const SavedInputs = () => {
     navigate(`/home?${queryParams.toString()}`);
   };
 
+  // Add a popup that only last for 2 seconds
+  const addPopup = (text, color) => {
+    setPopupsTexts((prevTexts) => [{ text: text, color: color }, ...prevTexts]);
+    setTimeout(() => {
+      setPopupsTexts((prevTexts) => prevTexts.slice(0, -1));
+    }, 6000); // 2 seconds
+  };
   return (
     <div>
       <Navbar />
+      <Popups popupsTexts={popupTexts} />
       <div
         style={{
           paddingTop: "7rem",
@@ -84,6 +111,7 @@ const SavedInputs = () => {
           inputData={savedInputsData}
           childAges={childAges}
           setId={setId}
+          deleteId={deleteSavedInputById}
           redirectURL={redirectURL}
         />
         <SavedCarsTable data={carData} id={id} />
