@@ -22,7 +22,7 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
     childCostPerYear: 25000,
     childAges: [],
     yearsOff: 5,
-    divorceAge: null,
+    divorceAge: 999,
     included: true,
   });
 
@@ -32,10 +32,33 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
 
     if (queryString) {
       const queryParams = new URLSearchParams(queryString);
-      const data = JSON.parse(decodeURIComponent(queryParams.get("mad")));
-      if (data) {
-        if (data.divorceAge) setIsDivorced("true");
+      let data;
+      try {
+        data = JSON.parse(decodeURIComponent(queryParams.get("mad")));
+      } catch (error) {
+        throw new Error("Malformed 'mad' parameter: Invalid JSON structure.");
+      }
+      const keys = [
+        "marriageAge",
+        "savings",
+        "checking",
+        "income",
+        "childCostPerYear",
+        "childAges",
+        "yearsOff",
+        "divorceAge",
+        "included",
+      ];
+      if (
+        data &&
+        typeof data === "object" &&
+        keys.every((key) => key in data) &&
+        !Object.values(data).some((value) => value === null)
+      ) {
+        if (data.divorceAge && data.divorceAge !== 999) setIsDivorced("true");
         setInputValues(data);
+      } else {
+        console.log("mad params incorrect");
       }
     }
     setLoading(false);
@@ -52,10 +75,8 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
       divorceAge,
       included,
     } = inputValues;
-    if (!included) {
-      setMarriageData(inputValues);
-      return;
-    }
+    setMarriageData(inputValues);
+    if (!included) return;
 
     const inputs = [marriageAge, savings, checking, income, childCostPerYear];
     if (
@@ -64,20 +85,27 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
       (divorceAge !== null && isNaN(divorceAge))
     ) {
       setErrorMessage("Invalid Input");
+      setMarriageData(null);
     } else if (marriageAge > lifeExpetency) {
       setErrorMessage(
         "Life expectancy must be less than or equal to marriage age"
       );
+      setMarriageData(null);
     } else if (marriageAge < currentAge) {
       setErrorMessage("Current age must be greater than marriage age");
+      setMarriageData(null);
     } else if (childAges.some((input) => input < currentAge)) {
       setErrorMessage("Current age must be greater than age you have child");
+      setMarriageData(null);
     } else if (childAges.some((input) => input > lifeExpetency)) {
       setErrorMessage("Age you have child must be less than life expetency");
-    } else if (divorceAge !== null && divorceAge <= marriageAge) {
+      setMarriageData(null);
+    } else if (isDivorced === "true" && divorceAge <= marriageAge) {
       setErrorMessage("Divorce Age must be greater than marriage age");
-    } else if (divorceAge !== null && divorceAge > lifeExpetency) {
+      setMarriageData(null);
+    } else if (isDivorced === "true" && divorceAge > lifeExpetency) {
       setErrorMessage("Divorce Age must be less than life expetency");
+      setMarriageData(null);
     } else {
       setErrorMessage("");
       setMarriageData(inputValues);
@@ -209,7 +237,7 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
             setIsDivorced(value);
             setInputValues((prevValues) => ({
               ...prevValues,
-              divorceAge: value === "true" ? 35 : null,
+              divorceAge: value === "true" ? 35 : 999,
             }));
           }}
         />

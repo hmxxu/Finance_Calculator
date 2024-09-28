@@ -40,11 +40,28 @@ const Input = ({
         : parseInt(valueWithoutCommas, 10);
 
       // Check if parsed value is valid
-      const isValueValid = valueWithoutCommas === "" || parsedValue <= maxValue;
+      const isValueValid = valueWithoutCommas !== "" && parsedValue <= maxValue;
 
       setInputValue(value);
       onInputChange(name, isValueValid ? parsedValue : null);
       setInvalidInput(!isValueValid);
+    }
+  };
+
+  const handleBlur = (e) => {
+    // Only format if decimal points are not allowed
+    if (allowDecimal) return;
+
+    let value = e.target.value;
+
+    // Remove any existing commas
+    value = value.replace(/,/g, "");
+
+    // Convert to a number and format with commas
+    if (!isNaN(value) && value !== "") {
+      const formattedValue = numberWithCommas(parseFloat(value));
+      e.target.value = formattedValue; // Update the input value with commas
+      setInputValue(formattedValue);
     }
   };
 
@@ -91,6 +108,7 @@ const Input = ({
                   : inputValue
               }
               onChange={handleChange}
+              onBlur={handleBlur}
             />
             <span className="right-label-text">{rightlabelText}</span>
             {isAboveMediumScreens && (
@@ -112,12 +130,6 @@ const Input = ({
             </div>
           )}
         </td>
-
-        {/* {isAboveMediumScreens && (
-          <td style={{ paddingRight: "5px", textAlign: "left" }}>
-            {rightText}
-          </td>
-        )} */}
         {selectValues && isAboveMediumScreens && (
           <td>
             <select

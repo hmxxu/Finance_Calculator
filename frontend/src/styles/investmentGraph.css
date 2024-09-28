@@ -6,6 +6,12 @@
   padding-bottom: 15px;
 }
 
+#investment-graph-header {
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+}
+
 @media (max-width: 768px) {
   #investment-graph-wrapper {
     height: 100%;
@@ -18,6 +24,7 @@
   }
 
   #investment-graph {
+    height: 50%;
     border: 2px solid black;
     padding-top: 0px;
     padding-bottom: 0px;

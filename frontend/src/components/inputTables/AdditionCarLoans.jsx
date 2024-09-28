@@ -43,12 +43,15 @@ const AdditionCarLoans = ({
     const inputs = Object.values(inputValues);
     if (inputs.some((input) => isNaN(input) || input === null)) {
       setErrorMessage("Invalid Input");
+      setCDInterval(null);
     } else if (currentAge > startAge) {
       setErrorMessage(
         "Current Age must be less than age of first car purchase"
       );
+      setCDInterval(null);
     } else if (startAge > lifeExpetency) {
       setErrorMessage("Age of first car purchase be before life expentency");
+      setCDInterval(null);
     } else {
       setCDInterval(inputValues);
       setErrorMessage("");

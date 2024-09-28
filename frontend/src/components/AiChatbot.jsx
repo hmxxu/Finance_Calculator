@@ -14,7 +14,7 @@ const AiChatbot = () => {
     {
       user: "bot",
       message:
-        "Hello, I am your AI chatbot assistant. Feel free to ask me any questions about finance",
+        "Hello, I am your AI chatbot assistant. Feel free to ask me any questions about finance.",
     },
   ]);
 

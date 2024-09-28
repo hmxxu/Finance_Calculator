@@ -36,8 +36,36 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
 
     if (queryString) {
       const queryParams = new URLSearchParams(queryString);
-      const data = JSON.parse(decodeURIComponent(queryParams.get("rd")));
-      if (data) setInputValues(data);
+      let data;
+      try {
+        data = JSON.parse(decodeURIComponent(queryParams.get("rd")));
+      } catch (error) {
+        throw new Error("Malformed 'rd' parameter: Invalid JSON structure.");
+      }
+      const keys = [
+        "currentAge",
+        "retirementAge",
+        "lifeExpectancy",
+        "income",
+        "incomeIncrease",
+        "investReturnRate",
+        "savings",
+        "savingsContribution",
+        "checking",
+        "checkingContribution",
+        "retirementIncomeNeeded",
+        "retirementIncome",
+      ];
+      if (
+        data &&
+        typeof data === "object" &&
+        keys.every((key) => key in data) &&
+        !Object.values(data).some((value) => value === null)
+      ) {
+        setInputValues(data);
+      } else {
+        console.log("rd params incorrect");
+      }
     }
     setLoading(false);
   }, []);
@@ -51,25 +79,27 @@ const RetirementInputBox = ({ setRetirementData, homePage }) => {
       checkingContribution,
     } = inputValues;
     const inputs = Object.values(inputValues);
+    if (homePage) setRetirementData(inputValues);
 
     if (inputs.some((input) => isNaN(input) || input === null)) {
       setErrorMessage("Invalid Input");
+      setRetirementData(null);
     } else if (retirementAge >= lifeExpectancy) {
       setErrorMessage(
         "Retirement age can't be greater or equal to life expectancy"
       );
+      setRetirementData(null);
     } else if (currentAge >= retirementAge) {
       setErrorMessage(
         "Current age can't be greater or equal to retirement age"
       );
+      setRetirementData(null);
     } else if (savingsContribution + checkingContribution > 100) {
       setErrorMessage(
         "Savings and checking contribution must be less than 100%"
       );
+      setRetirementData(null);
     } else {
-      if (homePage) {
-        setRetirementData(inputValues);
-      }
       setErrorMessage("");
     }
   }, [inputValues, homePage, setRetirementData]);

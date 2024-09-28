@@ -37,26 +37,52 @@ const CarPaymentInputBox = ({
 
     if (queryString) {
       const queryParams = new URLSearchParams(queryString);
-      const data = JSON.parse(decodeURIComponent(queryParams.get("cds")));
-      if (data && data.length >= index + 1) setInputValues(data[index]);
+      let data;
+      try {
+        data = JSON.parse(decodeURIComponent(queryParams.get("cds")));
+      } catch (error) {
+        throw new Error("Malformed 'cds' parameter: Invalid JSON structure.");
+      }
+      const keys = [
+        "price",
+        "term",
+        "interest",
+        "downPayment",
+        "salesTax",
+        "fees",
+        "startAge",
+        "inflation",
+      ];
+      if (
+        data &&
+        data.length >= index + 1 &&
+        typeof data[index] === "object" &&
+        keys.every((key) => key in data[index]) &&
+        !Object.values(data[index]).some((value) => value === null)
+      ) {
+        setInputValues(data[index]);
+      } else {
+        console.log("cds params incorrect");
+      }
     }
     setLoading(false);
   }, []);
 
   useEffect(() => {
     const { startAge, term } = inputValues;
+    if (homePage) setCarPaymentInputs(inputValues);
 
     const inputs = Object.values(inputValues);
     if (inputs.some((input) => isNaN(input) || input === null)) {
       setErrorMessage("Invalid Input");
+      setCarPaymentInputs(null);
     } else if (homePage && startAge < currentAge) {
       setErrorMessage("Current Age must be less car loan start age");
+      setCarPaymentInputs(null);
     } else if (homePage && lifeExpetency < startAge + Math.ceil(term / 12)) {
       setErrorMessage("Car loan must end before life expentency");
+      setCarPaymentInputs(null);
     } else {
-      if (homePage) {
-        setCarPaymentInputs(inputValues);
-      }
       setErrorMessage("");
     }
   }, [inputValues, homePage]);

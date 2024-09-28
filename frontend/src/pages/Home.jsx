@@ -17,6 +17,7 @@ import MarriageInputBox from "../components/inputTables/MarriageInputBox";
 import MontlhyExpensesInputBox from "../components/inputTables/MonthlyExpensesInputBox";
 import InputError from "../components/inputTables/inputTableComponenets/InputError";
 import AiChatbot from "../components/AiChatbot";
+import Popups from "../components/Popups";
 
 const Home = () => {
   const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
@@ -25,6 +26,7 @@ const Home = () => {
   const [mortgageData, setMortgageData] = useState(null);
   const [marriageData, setMarriageData] = useState(null);
   const [monthlyExpensesData, setMonthlyExpensesData] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [results, setResults] = useState(null);
 
@@ -35,10 +37,46 @@ const Home = () => {
   const [carLoanType, setCarLoanType] = useState("normal");
 
   const [lastAssetInputs, setLastAssetInputs] = useState(null);
+  const [popupTexts, setPopupsTexts] = useState([]);
+
+  // If carLoanCount is decremented, trim carPaymentData
+  useEffect(() => {
+    if (carLoanCount < carPaymentData.length) {
+      setCarPaymentData((prevData) => prevData.slice(0, carLoanCount));
+    }
+  }, [carPaymentData, carLoanCount]);
+
+  // Rerender interval car inputs if current age or life expectancy changes
+  useEffect(() => {
+    if (lastAssetInputs === null || carLoanType === "normal") return;
+    createCDInterval(lastAssetInputs);
+  }, [retirementData?.currentAge, retirementData?.lifeExpectancy]);
+
+// Add a popup that only last for 2 seconds
+  const addPopup = (text, color) => {
+    setPopupsTexts((prevTexts) => [{ text: text, color: color }, ...prevTexts]);
+    setTimeout(() => {
+      setPopupsTexts((prevTexts) => prevTexts.slice(0, -1));
+    }, 6000); // 2 seconds
+  };
 
   function calculateButton() {
     const carLoanData =
       carLoanType === "normal" ? carPaymentData : carIntervalData;
+
+    // Check if any of the input boxes have null values
+    if (
+      !retirementData ||
+      !mortgageData ||
+      !marriageData ||
+      !monthlyExpensesData ||
+      !carLoanData ||
+      carLoanData.some((value) => value === null)
+    ) {
+      addPopup("One of the inputs are invalid", "red");
+      setErrorMessage("One of the inputs are invalid");
+      return;
+    }
     const res = calculateResults(
       retirementData,
       mortgageData,
@@ -47,6 +85,25 @@ const Home = () => {
       monthlyExpensesData
     );
     setResults(res);
+    if (res !== null && res[0][res[0].length - 1][5] < 0) {
+      addPopup(
+        "Cannot afford payments, consider increasing income or decreasing expenses and/or assets",
+        "red"
+      );
+      setErrorMessage(
+        "Cannot afford payments, consider increasing income or decreasing expenses and/or assets"
+      );
+    } else {
+      setErrorMessage("");
+    }
+
+    // Scroll to results (wait for results to render first)
+    setTimeout(() => {
+      window.scrollTo({
+        top: isAboveMediumScreens ? 1335 : 2320,
+        behavior: "smooth",
+      });
+    }, 100);
   }
 
   const updateCarPaymentData = (index, newData) => {
@@ -57,24 +114,11 @@ const Home = () => {
     });
   };
 
-  // Scroll to results
-  useEffect(() => {
-    if (results) {
-      window.scrollTo({
-        top: isAboveMediumScreens ? 1335 : 2320,
-        behavior: "smooth",
-      });
-    }
-  }, [results]);
-
-  useEffect(() => {
-    // If carLoanCount is decremented, trim carPaymentData
-    if (carLoanCount < carPaymentData.length) {
-      setCarPaymentData((prevData) => prevData.slice(0, carLoanCount));
-    }
-  }, [carPaymentData, carLoanCount]);
-
   function createCDInterval(inputs) {
+    if (!inputs) {
+      setCarIntervalData(null);
+      return;
+    }
     if (
       retirementData === null ||
       retirementData.currentAge === null ||
@@ -103,13 +147,6 @@ const Home = () => {
     }
     setCarIntervalData(cdIntervals);
   }
-  function recallCreateCDInterval() {
-    if (lastAssetInputs === null) return;
-    createCDInterval(lastAssetInputs);
-  }
-  useEffect(() => {
-    recallCreateCDInterval();
-  }, [retirementData?.currentAge, retirementData?.lifeExpectancy]);
 
   const saveInputs = () => {
     const carLoanData =
@@ -128,13 +165,21 @@ const Home = () => {
       }),
     })
       .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
+      .then((data) => {
+        console.log(data);
+        addPopup("Successfully saved input", "green"); // Add popup here
+      })
+      .catch((err) => {
+        addPopup("Error connecting to database", "red");
+        console.log(err);
+      });
   };
 
   return (
     <div className="App">
       <Navbar />
+      <Popups popupsTexts={popupTexts} />
+      <AiChatbot />
 
       <div
         style={{
@@ -240,7 +285,9 @@ const Home = () => {
           </div>
           {/* Car Input boxes */}
           {((carLoanType === "normal" && carLoanCount > 0) ||
-            (carLoanType === "interval" && carIntervalData.length > 0)) && (
+            (carLoanType === "interval" &&
+              carIntervalData &&
+              carIntervalData.length > 0)) && (
             <div
               style={{
                 marginLeft: "auto",
@@ -291,12 +338,7 @@ const Home = () => {
               width: isAboveMediumScreens ? "100%" : "95%",
             }}
           >
-            <InputError
-              visible={
-                results !== null && results[0][results[0].length - 1][5] < 0
-              }
-              text="Cannot afford payments, consider increasing income or decreasing expenses and/or assets"
-            />
+            <InputError visible={errorMessage !== ""} text={errorMessage} />
             <tbody style={{ height: isAboveMediumScreens ? "15px" : "35px" }} />
             <tbody>
               <tr>
@@ -308,12 +350,14 @@ const Home = () => {
                     justifyContent: "center",
                   }}
                 >
+                  {/* Load Saved Input Button */}
                   <button
                     onClick={() => navigate("/saved-inputs")}
                     className="save-button"
                   >
                     Load Saved Input
                   </button>
+                  {/* Save Input button */}
                   <button onClick={() => saveInputs()} className="save-button">
                     Save Inputs
                   </button>
@@ -365,7 +409,6 @@ const Home = () => {
           </div>
         )}
       </div>
-      <AiChatbot />
     </div>
   );
 };

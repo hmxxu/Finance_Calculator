@@ -29,8 +29,33 @@ const MontlhyExpensesInputBox = ({ setMonthlyExpensesData }) => {
 
     if (queryString) {
       const queryParams = new URLSearchParams(queryString);
-      const data = JSON.parse(decodeURIComponent(queryParams.get("med")));
-      if (data) setInputValues(data);
+      let data;
+      try {
+        data = JSON.parse(decodeURIComponent(queryParams.get("med")));
+      } catch (error) {
+        throw new Error("Malformed 'med' parameter: Invalid JSON structure.");
+      }
+      const keys = [
+        "groceryFood",
+        "healthInsurance",
+        "carInsurance",
+        "cellPhonePlan",
+        "utilities",
+        "subscriptions",
+        "transportation",
+        "pet",
+        "others",
+      ];
+      if (
+        data &&
+        typeof data === "object" &&
+        keys.every((key) => key in data) &&
+        !Object.values(data).some((value) => value === null)
+      ) {
+        setInputValues(data);
+      } else {
+        console.log("med params incorrect");
+      }
     }
     setLoading(false);
   }, []);
@@ -39,6 +64,7 @@ const MontlhyExpensesInputBox = ({ setMonthlyExpensesData }) => {
     const inputs = Object.values(inputValues);
     if (inputs.some((input) => isNaN(input) || input === null)) {
       setErrorMessage("Invalid Input");
+      setMonthlyExpensesData(null);
     } else {
       setErrorMessage("");
       setMonthlyExpensesData(inputValues);

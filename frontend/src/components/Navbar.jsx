@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import icon from "../svgs/calculator.svg";
 import "../App.css";
 import "../styles/navbar.css";
@@ -27,36 +28,22 @@ const Navbar = () => {
     };
   }, []);
 
+  const SingleLink = ({ page, to }) => (
+    <Link
+      className="nav-menu-link"
+      to={to}
+      onClick={() => setIsMenuToggled(false)}
+    >
+      {page}
+    </Link>
+  );
+
   const Links = ({ id }) => (
     <div id={id}>
-      <Link
-        className="nav-menu-link"
-        to="/investment-calculator"
-        onClick={() => setIsMenuToggled(false)}
-      >
-        Investment
-      </Link>
-      <Link
-        className="nav-menu-link"
-        to="/retirement-age-calculator"
-        onClick={() => setIsMenuToggled(false)}
-      >
-        Retirement Age
-      </Link>
-      <Link
-        className="nav-menu-link"
-        to="/mortgage-calculator"
-        onClick={() => setIsMenuToggled(false)}
-      >
-        Mortgage
-      </Link>
-      <Link
-        className="nav-menu-link"
-        to="/car-payment-calculator"
-        onClick={() => setIsMenuToggled(false)}
-      >
-        Car Payment
-      </Link>
+      <SingleLink page="Investment" to="/investment-calculator" />
+      <SingleLink page="Retirement Age" to="/retirement-age-calculator" />
+      <SingleLink page="Mortgage" to="/mortgage-calculator" />
+      <SingleLink page="Car Payment" to="/car-payment-calculator" />
     </div>
   );
 
@@ -66,7 +53,14 @@ const Navbar = () => {
         <div id="nav-3">
           {/* Left side */}
           <div id="nav-icon-wrapper" onClick={() => navigate("/home")}>
-            <img src={icon} alt="Calculator Icon" width="50px" />
+            <motion.img
+              src={icon}
+              alt="Calculator Icon"
+              width="50px"
+              whileHover={{ scale: 1.1, opacity: 0.8 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            />
             <div className="nav-menu-link">Finance Calculator</div>
           </div>
 
