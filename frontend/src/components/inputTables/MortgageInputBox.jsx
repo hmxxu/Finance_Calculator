@@ -69,6 +69,11 @@ const MortgageInputBox = ({
   }, []);
 
   useEffect(() => {
+    if (!currentAge && homePage) {
+      setErrorMessage("Current Age is invalid");
+      setMortgageData(null);
+      return;
+    }
     const {
       price,
       downPayment,

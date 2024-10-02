@@ -45,7 +45,7 @@ const FilledInput = ({
           <input
             name={leftText}
             type="text"
-            className="input-box"
+            className="input-box-valid"
             style={{ pointerEvents: "none", backgroundColor: "#d3d3d3 " }}
             value={
               typeof inputValue === "number"

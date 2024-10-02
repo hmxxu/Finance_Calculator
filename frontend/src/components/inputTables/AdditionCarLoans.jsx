@@ -39,6 +39,11 @@ const AdditionCarLoans = ({
   }, []);
 
   useEffect(() => {
+    if (!currentAge) {
+      setErrorMessage("Current Age is invalid");
+      setCDInterval(null);
+      return;
+    }
     const { startAge } = inputValues;
     const inputs = Object.values(inputValues);
     if (inputs.some((input) => isNaN(input) || input === null)) {
