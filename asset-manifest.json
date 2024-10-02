@@ -1,18 +1,26 @@
 {
   "files": {
-    "main.css": "/Finance_Calculator/static/css/main.5b35ff95.css",
-    "main.js": "/Finance_Calculator/static/js/main.e0e76c7c.js",
+    "main.css": "/Finance_Calculator/static/css/main.f7d5c36c.css",
+    "main.js": "/Finance_Calculator/static/js/main.e5dca468.js",
     "static/js/453.f9138dea.chunk.js": "/Finance_Calculator/static/js/453.f9138dea.chunk.js",
+    "static/media/Roboto-Medium.ttf": "/Finance_Calculator/static/media/Roboto-Medium.e73e917f7bfa48666e00.ttf",
+    "static/media/Roboto-Regular.ttf": "/Finance_Calculator/static/media/Roboto-Regular.27f62b53b93858475a7f.ttf",
+    "static/media/Roboto-Bold.ttf": "/Finance_Calculator/static/media/Roboto-Bold.d50a80138ec4f2fb5e9f.ttf",
+    "static/media/Roboto-Light.ttf": "/Finance_Calculator/static/media/Roboto-Light.839cb7309f46fed11436.ttf",
     "service-worker.js": "/Finance_Calculator/service-worker.js",
     "static/media/calculator.svg": "/Finance_Calculator/static/media/calculator.01179f90c87ad94ae2bbeb92613a6219.svg",
+    "static/media/ai.svg": "/Finance_Calculator/static/media/ai.d20e3866cb7b6656cea822cf06f25de5.svg",
+    "static/media/send.svg": "/Finance_Calculator/static/media/send.00fc4bd6c8da16964c0bf9879a456082.svg",
     "static/media/question-circle.svg": "/Finance_Calculator/static/media/question-circle.3608c471a0e1e07a6aad4f71e20a4670.svg",
+    "static/media/close.svg": "/Finance_Calculator/static/media/close.ed7acf902e429e3d87fc17fb8fd93bab.svg",
     "index.html": "/Finance_Calculator/index.html",
-    "main.5b35ff95.css.map": "/Finance_Calculator/static/css/main.5b35ff95.css.map",
-    "main.e0e76c7c.js.map": "/Finance_Calculator/static/js/main.e0e76c7c.js.map",
+    "static/media/expandRight.svg": "/Finance_Calculator/static/media/expandRight.d054d85bf551b497bdfa15c45d750e00.svg",
+    "main.f7d5c36c.css.map": "/Finance_Calculator/static/css/main.f7d5c36c.css.map",
+    "main.e5dca468.js.map": "/Finance_Calculator/static/js/main.e5dca468.js.map",
     "453.f9138dea.chunk.js.map": "/Finance_Calculator/static/js/453.f9138dea.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.5b35ff95.css",
-    "static/js/main.e0e76c7c.js"
+    "static/css/main.f7d5c36c.css",
+    "static/js/main.e5dca468.js"
   ]
 }
