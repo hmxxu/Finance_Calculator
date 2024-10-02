@@ -101,7 +101,7 @@ const Input = ({
             <input
               name={leftText}
               type="text"
-              className="input-box"
+              className={invalidInput ? "input-box-invalid" : "input-box-valid"}
               value={
                 typeof inputValue === "number"
                   ? numberWithCommas(inputValue)

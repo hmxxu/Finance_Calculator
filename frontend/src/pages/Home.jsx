@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import RetirementInputBox from "../components/inputTables/RetirementInputBox";
@@ -38,6 +38,7 @@ const Home = () => {
 
   const [lastAssetInputs, setLastAssetInputs] = useState(null);
   const [popupTexts, setPopupsTexts] = useState([]);
+  const resultRef = useRef(null);
 
   // If carLoanCount is decremented, trim carPaymentData
   useEffect(() => {
@@ -52,7 +53,7 @@ const Home = () => {
     createCDInterval(lastAssetInputs);
   }, [retirementData?.currentAge, retirementData?.lifeExpectancy]);
 
-// Add a popup that only last for 2 seconds
+  // Add a popup that only last for 2 seconds
   const addPopup = (text, color) => {
     setPopupsTexts((prevTexts) => [{ text: text, color: color }, ...prevTexts]);
     setTimeout(() => {
@@ -99,10 +100,12 @@ const Home = () => {
 
     // Scroll to results (wait for results to render first)
     setTimeout(() => {
-      window.scrollTo({
-        top: isAboveMediumScreens ? 1335 : 2320,
-        behavior: "smooth",
-      });
+      if (resultRef.current) {
+        window.scrollTo({
+          top: resultRef.current.offsetTop - 140,
+          behavior: "smooth",
+        });
+      }
     }, 100);
   }
 
@@ -115,16 +118,16 @@ const Home = () => {
   };
 
   function createCDInterval(inputs) {
-    if (!inputs) {
-      setCarIntervalData(null);
-      return;
-    }
     if (
+      !inputs ||
       retirementData === null ||
       retirementData.currentAge === null ||
       retirementData.lifeExpectancy === null
-    )
+    ) {
+      setCarIntervalData(null);
       return;
+    }
+
     setLastAssetInputs(inputs);
     const cdIntervals = [];
     let currentPrice = inputs.startPrice;
@@ -234,7 +237,7 @@ const Home = () => {
 
               <MarriageInputBox
                 setMarriageData={setMarriageData}
-                currentAge={retirementData ? retirementData.currentAge : 0}
+                currentAge={retirementData ? retirementData.currentAge : null}
                 lifeExpetency={
                   retirementData ? retirementData.lifeExpectancy : 0
                 }
@@ -253,7 +256,7 @@ const Home = () => {
               <MortgageInputBox
                 setMortgageData={setMortgageData}
                 homePage={true}
-                currentAge={retirementData ? retirementData.currentAge : 0}
+                currentAge={retirementData ? retirementData.currentAge : null}
                 lifeExpetency={
                   retirementData ? retirementData.lifeExpectancy : 0
                 }
@@ -276,7 +279,7 @@ const Home = () => {
                 setCarLoanType={setCarLoanType}
                 setCarLoanCount={setCarLoanCount}
                 setCDInterval={createCDInterval}
-                currentAge={retirementData ? retirementData.currentAge : 0}
+                currentAge={retirementData ? retirementData.currentAge : null}
                 lifeExpetency={
                   retirementData ? retirementData.lifeExpectancy : 0
                 }
@@ -309,7 +312,7 @@ const Home = () => {
                         }
                         homePage={true}
                         currentAge={
-                          retirementData ? retirementData.currentAge : 0
+                          retirementData ? retirementData.currentAge : null
                         }
                         lifeExpetency={
                           retirementData ? retirementData.lifeExpectancy : 0
@@ -324,7 +327,9 @@ const Home = () => {
                         header={"Car At Age " + cd.startAge}
                         price={cd.price}
                         startAge={cd.startAge}
-                        currentAge={retirementData.currentAge}
+                        currentAge={
+                          retirementData ? retirementData.currentAge : null
+                        }
                       />
                     </div>
                   ))}
@@ -379,6 +384,7 @@ const Home = () => {
         )}
         {results && (
           <div
+            ref={resultRef}
             style={{
               display: "flex",
               flexDirection: "column",

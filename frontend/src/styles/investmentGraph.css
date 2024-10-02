@@ -8,8 +8,7 @@
 
 #investment-graph-header {
   text-align: center;
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
+  font-family: roboto-bold;
 }
 
 @media (max-width: 768px) {

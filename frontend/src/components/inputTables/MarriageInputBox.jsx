@@ -65,6 +65,11 @@ const MarriageInputBox = ({ setMarriageData, currentAge, lifeExpetency }) => {
   }, []);
 
   useEffect(() => {
+    if (!currentAge) {
+      setErrorMessage("Current Age is invalid");
+      setMarriageData(null);
+      return;
+    }
     const {
       marriageAge,
       savings,

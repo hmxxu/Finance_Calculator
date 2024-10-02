@@ -5,6 +5,7 @@
   margin-right: auto;
   border-collapse: collapse;
   border-spacing: 10px 0;
+  font-family: roboto;
 }
 
 .saved-inputs-table {
@@ -23,12 +24,12 @@
 
 .investment-table-col-header td,
 .saved-inputs-table-col-header td {
-  font-weight: bold;
   background-color: #336699;
   color: white;
   border-bottom: solid 1px #bbbbbb;
   padding-top: 5px;
   padding-bottom: 5px;
+  font-family: roboto-bold;
 }
 
 .investment-table tbody tr:nth-child(even),

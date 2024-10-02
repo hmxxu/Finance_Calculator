@@ -69,6 +69,11 @@ const CarPaymentInputBox = ({
   }, []);
 
   useEffect(() => {
+    if (!currentAge && homePage) {
+      setErrorMessage("Current Age is invalid");
+      setCarPaymentInputs(null);
+      return;
+    }
     const { startAge, term } = inputValues;
     if (homePage) setCarPaymentInputs(inputValues);
 

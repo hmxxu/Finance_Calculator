@@ -45,8 +45,7 @@
 .nav-menu-link {
   color: white;
   text-decoration: none;
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
+  font-family: roboto-bold;
 }
 
 .nav-menu-link:hover {

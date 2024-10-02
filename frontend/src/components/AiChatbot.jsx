@@ -124,7 +124,7 @@ const AiChatbot = () => {
   };
 
   return (
-    <div>
+    <>
       {/* Icon to open chatbox */}
       {!chatBotToggled && (
         <motion.div
@@ -190,7 +190,14 @@ const AiChatbot = () => {
                     </div>
                   )}
                   {/* Message Bubble */}
-                  <div className={messageObj.user + "-chat-message"}>
+                  <div
+                    className={
+                      `${messageObj.user}-chat-message ` +
+                      (messageObj.message === "Server is not responding"
+                        ? "error-chat-message"
+                        : "")
+                    }
+                  >
                     {!messageObj.message ? (
                       <div id="dot-wrapper">
                         <div className="dot" />
@@ -236,7 +243,7 @@ const AiChatbot = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 };
 
