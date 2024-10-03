@@ -38,6 +38,7 @@ const Home = () => {
 
   const [lastAssetInputs, setLastAssetInputs] = useState(null);
   const [popupTexts, setPopupsTexts] = useState([]);
+  const [cursorType, setCursorType] = useState([]);
   const resultRef = useRef(null);
 
   // If carLoanCount is decremented, trim carPaymentData
@@ -152,6 +153,7 @@ const Home = () => {
   }
 
   const saveInputs = () => {
+    setCursorType((prevItems) => [...prevItems, "1"]);
     const carLoanData =
       carLoanType === "normal" ? carPaymentData : carIntervalData;
     fetch("http://localhost:8081/insertSavedInputs", {
@@ -175,11 +177,17 @@ const Home = () => {
       .catch((err) => {
         addPopup("Error connecting to database", "red");
         console.log(err);
+      })
+      .finally(() => {
+        setCursorType((prevItems) => prevItems.slice(0, -1));
       });
   };
 
   return (
-    <div className="App">
+    <div
+      className="App"
+      style={{ cursor: cursorType.length === 0 ? "auto" : "wait" }}
+    >
       <Navbar />
       <Popups popupsTexts={popupTexts} />
       <AiChatbot />
