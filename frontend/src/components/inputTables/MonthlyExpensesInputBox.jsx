@@ -5,7 +5,7 @@ import InputHeader from "./inputTableComponenets/InputHeader";
 import Input from "./inputTableComponenets/Input";
 import InputError from "./inputTableComponenets/InputError";
 import FilledInput from "./inputTableComponenets/FilledInput";
-import { sumArr } from "../../helperFunctions";
+import { sumArr } from "../../utils/helperFunctions";
 
 const MontlhyExpensesInputBox = ({ setMonthlyExpensesData }) => {
   const [loading, setLoading] = useState(true);

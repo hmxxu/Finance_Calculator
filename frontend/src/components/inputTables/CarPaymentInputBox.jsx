@@ -7,7 +7,7 @@ import InputError from "./inputTableComponenets/InputError";
 import InputButton from "./inputTableComponenets/InputButton";
 import FilledInput from "./inputTableComponenets/FilledInput";
 import useMediaQuery from "../../hooks/useMediaQuery";
-import { calcInflatedPrice } from "../../helperFunctions";
+import { calcInflatedPrice } from "../../utils/helperFunctions";
 
 const CarPaymentInputBox = ({
   setCarPaymentInputs,

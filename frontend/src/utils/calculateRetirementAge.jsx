@@ -1,4 +1,4 @@
-const { taxedIncome, formatToMoney } = require("./helperFunctions");
+import { taxedIncome, formatToMoney } from "./helperFunctions";
 
 function calculateResults(
   currentAge,

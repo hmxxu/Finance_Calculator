@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 import RetirementInputBox from "../components/inputTables/RetirementInputBox";
 import MortgageInputBox from "../components/inputTables/MortgageInputBox";
 import CarPaymentInputBox from "../components/inputTables/CarPaymentInputBox";
-import { calculateResults } from "../calculateHome";
+import { calculateResults } from "../utils/calculateHome";
 import InvestmentTable from "../components/InvestmentTable";
 import InvestmentGraph from "../components/InvestmentGraph";
 import ResultsTable from "../components/ResultsTable";

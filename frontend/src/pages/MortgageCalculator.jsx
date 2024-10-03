@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import ResultsTable from "../components/ResultsTable";
 import InvestmentTable from "../components/InvestmentTable";
 import MortgageInputBox from "../components/inputTables/MortgageInputBox";
-import { calculateResults } from "../calculateMortgage";
+import { calculateResults } from "../utils/calculateMortgage";
 import useMediaQuery from "../hooks/useMediaQuery";
 
 const MortgageCalculator = () => {

@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import InvestmentGraph from "../components/InvestmentGraph";
 import InvestmentTable from "../components/InvestmentTable";
 import ResultsTable from "../components/ResultsTable";
-import { calculateResults } from "../calculateRetirementAge";
+import { calculateResults } from "../utils/calculateRetirementAge";
 import RetirementInputBox from "../components/inputTables/RetirementInputBox";
 import useMediaQuery from "../hooks/useMediaQuery";
 

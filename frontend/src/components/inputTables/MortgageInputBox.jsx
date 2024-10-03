@@ -8,7 +8,7 @@ import InputRadioButton from "./inputTableComponenets/InputRadioButtons";
 import FilledInput from "./inputTableComponenets/FilledInput";
 import InputError from "./inputTableComponenets/InputError";
 import IncludeExcludeButtons from "./inputTableComponenets/IncludeExcludeButtons";
-import { calcInflatedPrice } from "../../helperFunctions";
+import { calcInflatedPrice } from "../../utils/helperFunctions";
 
 const MortgageInputBox = ({
   setMortgageData,

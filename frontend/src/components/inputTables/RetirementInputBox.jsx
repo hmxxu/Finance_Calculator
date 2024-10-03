@@ -6,7 +6,7 @@ import Input from "./inputTableComponenets/Input";
 import InputButton from "./inputTableComponenets/InputButton";
 import FilledInput from "./inputTableComponenets/FilledInput";
 import InputError from "./inputTableComponenets/InputError";
-const { taxedIncome } = require("../../helperFunctions");
+const { taxedIncome } = require("../../utils/helperFunctions");
 
 const RetirementInputBox = ({ setRetirementData, homePage }) => {
   const [loading, setLoading] = useState(true);

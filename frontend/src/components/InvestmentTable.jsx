@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import "../styles/investmentTable.css";
-import { formatToMoney } from "../helperFunctions";
+import { formatToMoney } from "../utils/helperFunctions";
 
 const InvestmentTable = ({ data }) => {
   return (

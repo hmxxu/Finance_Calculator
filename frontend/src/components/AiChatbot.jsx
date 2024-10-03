@@ -5,7 +5,7 @@ import robot from "../svgs/ai.svg";
 import close from "../svgs/close.svg";
 import send from "../svgs/send.svg";
 import "../styles/AiChatbot.css";
-import { smoothScroll } from "../helperFunctions";
+import { smoothScroll } from "../utils/helperFunctions";
 
 const AiChatbot = () => {
   const [chatBotToggled, setChatBotToggled] = useState(false);

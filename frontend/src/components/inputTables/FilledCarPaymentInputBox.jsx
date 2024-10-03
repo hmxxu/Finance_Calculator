@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import InputHeader from "./inputTableComponenets/InputHeader";
 import FilledInput from "./inputTableComponenets/FilledInput";
-import { calcInflatedPrice } from "../../helperFunctions";
+import { calcInflatedPrice } from "../../utils/helperFunctions";
 
 const FilledCarPaymentInputBox = ({
   header = "Car Payment Inputs",

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import InputHeader from "./inputTables/inputTableComponenets/InputHeader";
-import { formatToMoney } from "../helperFunctions";
+import { formatToMoney } from "../utils/helperFunctions";
 
 const ResultsTable = ({ header, results, resetOnClick }) => {
   return (

@@ -2,35 +2,47 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { fetchData } from "../fetchFunctions";
+import { useQuery } from "@tanstack/react-query";
 import SavedInputsTable from "../components/SavedInputsTable";
 import SavedCarsTable from "../components/SavedCarsTable";
 import Popups from "../components/Popups";
+
+// Function to fetch car data
+const fetchCarData = async (id) => {
+  const response = await fetch(`http://localhost:8081/cars/${id}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch cars");
+  }
+  return response.json();
+};
 
 const SavedInputs = () => {
   const navigate = useNavigate();
 
   const [id, setId] = useState(null);
   const [carData, setCarData] = useState(null);
-  const [savedInputsData, setSavedInputsData] = useState(null);
-  const [childAges, setChildAges] = useState(null);
   const [popupTexts, setPopupsTexts] = useState([]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        setSavedInputsData(await fetchData("savedinputs"));
-        setChildAges(await fetchData("childages"));
-      } catch (error) {
-        console.error("Failed to fetch savedinputs:", error);
-      }
-    })();
-  }, []);
+  const { data: savedInputsData } = useQuery({
+    queryKey: ["savedInputsData"],
+    queryFn: async () => {
+      const response = await fetch("http://localhost:8081/savedinputs");
+      return await response.json();
+    },
+  });
+
+  const { data: childAges } = useQuery({
+    queryKey: ["childAges"],
+    queryFn: async () => {
+      const response = await fetch("http://localhost:8081/childages");
+      return await response.json();
+    },
+  });
 
   useEffect(() => {
     (async () => {
       try {
-        setCarData(await fetchData("cars/" + id));
+        setCarData(await fetchCarData(id));
       } catch (error) {
         console.error("Failed to fetch cars:", error);
       }

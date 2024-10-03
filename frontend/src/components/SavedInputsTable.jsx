@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import "../styles/investmentTable.css";
 import expandRight from "../svgs/expandRight.svg";
 
-const SavedInputsTable = ({ inputData, childAges, setId, deleteId, redirectURL }) => {
+const SavedInputsTable = ({
+  inputData,
+  childAges,
+  setId,
+  deleteId,
+  redirectURL,
+}) => {
   // Sums and returns monthly expenses
   function getMonthlyExpenseTotal(inputs) {
     if (!inputs) return;

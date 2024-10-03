@@ -3,7 +3,7 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import InvestmentGraph from "../components/InvestmentGraph";
 import InvestmentTable from "../components/InvestmentTable";
-import { createRows } from "../calculateInvestmentRows";
+import { createRows } from "../utils/calculateInvestmentRows";
 import InvestmentInputBox from "../components/inputTables/InvestmentInputBox";
 import useMediaQuery from "../hooks/useMediaQuery";
 

@@ -3,7 +3,7 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import ResultsTable from "../components/ResultsTable";
 import CarPaymentInputBox from "../components/inputTables/CarPaymentInputBox";
-import { calculateResults } from "../calculateCarPayment";
+import { calculateResults } from "../utils/calculateCarPayment";
 import useMediaQuery from "../hooks/useMediaQuery";
 
 const CarPaymentCalculator = () => {
